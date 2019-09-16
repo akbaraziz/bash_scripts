@@ -8,5 +8,5 @@ set -ex
     then
       echo "$service is running!!!"
     else
-      /etc/init.d/$service start
+      /usr/lib/systemd/system/$service start
     fi

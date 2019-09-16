@@ -15,7 +15,7 @@ enabled=1
 EOL
 
 # Install Elastic Search
-sudo yum install elasticsearch
+sudo yum -y install elasticsearch
 
 # Restart Daemon Service
 sudo systemctl daemon-reload

@@ -1,7 +1,12 @@
+#!/bin/bash
+
+set -ex
+
 # Copy content below to ~/.bashrc
 
 # Turn on Bash command completion
-source /etc/bash_completion
+sudo yum install bash-completion
+source /etc/profile.d/bash_completion.sh
 
 # CMD Line aliases
 alias edit=$VISUAL
@@ -13,18 +18,13 @@ alias md='mkdir'
 alias move='mv'
 alias rd='rmdir'
 alias ren='mv'
-alias ipconfig='ifconfig'
+alias ipconfig='ip a'
 
 # Other Linux stuff
-alias bc='bc -l'
 alias diff='diff -u'
 
 # get updates from RHN
 alias update='yum -y update'
-
-# set eth1 as default
-alias dnstop='dnstop -l 5  eth1'
-alias vnstat='vnstat -i eth1'
 
 # force colorful grep output
 alias grep='grep --color'
