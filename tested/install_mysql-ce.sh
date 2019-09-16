@@ -15,7 +15,8 @@ export PATH=$JAVA_HOME:$PATH
 # Install MySQL 8 Community Edition
 yum install -y mysql-community-server
 
-./sbin/chkconfig --levels 345 mysqld on 
+systemctl enable mysqld.service
+systemctl start mysqld.service 
 
 # Changing default authentication settings
 cat >/etc/my.cnf <<EOL
