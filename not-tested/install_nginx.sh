@@ -5,21 +5,21 @@ set -ex
 
 # Create NGINX Red Hat 7 Repository
 cat > /etc/yum.repos.d/nginx.repo <<EOL
-[nginx]
-name=nginx repo
-baseurl=http://nginx.org/packages/mainline/rhel/7/$basearch/
-gpgcheck=0
-enabled=1
-EOL
-
-# Create NGINX CentOS 7 Repository
-#cat >/etc/yum.repos.d/nginx.repo <<EOL
 #[nginx]
 #name=nginx repo
-#baseurl=http://nginx.org/packages/centos/$releasever/$basearch/
+#baseurl=http://nginx.org/packages/rhel/$releasever/$basearch/
 #gpgcheck=0
 #enabled=1
 #EOL
+
+# Create NGINX CentOS 7 Repository
+#cat >/etc/yum.repos.d/nginx.repo <<EOL
+[nginx]
+name=nginx repo
+baseurl=http://nginx.org/packages/centos/7/$basearch/
+gpgcheck=0
+enabled=1
+EOL
 
 # Install NGINX
 yum install -y nginx
