@@ -8,7 +8,7 @@
 # Software version:
 # 1. OS: CentOS 7.4.1708 (Core) 64bit.
 # 2. Apache: Apache/2.4.6 (CentOS)
-# 3. MariaDB: 10.2.13-MariaDB
+# 3. MariaDB: 10.3-MariaDB
 # 4. PHP 7: PHP 7.2.3 (cli)
 #--------------------------------------------------
 # List function:
@@ -87,7 +87,7 @@ f_install_lamp () {
     cat > /etc/yum.repos.d/MariaDB.repo <<"EOF"
 [mariadb]
 name = MariaDB
-baseurl = http://yum.mariadb.org/10.2/centos7-amd64
+baseurl = http://yum.mariadb.org/10.4/centos7-amd64
 gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
 gpgcheck=1
 EOF
