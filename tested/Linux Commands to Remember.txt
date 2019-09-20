@@ -1,0 +1,36 @@
+UNIX Commands
+
+Get IP Address:
+ifconfig | grep inet | awk '{ print $2 }' | head -n 1
+
+List all firewll allowed ports:
+firewall-cmd --list-all
+
+If then option
+{
+if [ ! -f /scripts/alert ]; then
+    echo "File not found!"
+    exit 0
+fi
+}
+
+FILE=/etc/resolv.conf
+if test -f "$FILE"; then
+    echo "$FILE exist"
+fi
+
+FILE=/etc/docker
+if [ -d "$FILE" ]; then
+    echo "$FILE is a directory"
+fi
+
+FILE=/etc/docker
+if [ ! -f "$FILE" ]; then
+    echo "$FILE does not exist"
+fi
+
+FILE=/etc/docker
+if [ -f /etc/resolv.conf -a -f /etc/hosts ]; then
+    echo "$FILE is a directory"
+fi
+

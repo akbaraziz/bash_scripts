@@ -11,5 +11,3 @@ sudo yum install epel-release -y
 sudo yum install pwgen -y
 
 sudo pwgen -N 1 -s 96
-
-echo Copy the generated password for use on Graylog console
