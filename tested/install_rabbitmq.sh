@@ -3,7 +3,7 @@
 set -ex
 
 MQ_VER=3.7.15-1.el7
-ER_VER=21.3.8.1-1.el7
+ER_VER=22.0.7-1.el7
 MQ_ADMIN=mqadmin
 MQ_ADMIN_PASSWORD=P@ssword1
 
