@@ -3,20 +3,25 @@
 set -ex
 
 # Create MySQL Community Edition Repository
-rpm -Uvh https://dev.mysql.com/get/mysql80-community-release-el7-3.noarch.rpm
+rpm -Uvh https://dev.mysql.com/get/mysql-community-server-8.0.17-1.el7.x86_64.rpm
+
 
 # Install OpenJDK 8
-yum install java-1.8.0-openjdk-1.8.0.222.b10-0.el7_6.x86_64
+sudo yum -y install java-1.8.0-openjdk
 
 # Set JAVA_HOME
-export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.222.b10-0.el7_6.x86_64
+export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk
 export PATH=$JAVA_HOME:$PATH
 
 # Install MySQL 8 Community Edition
 yum install -y mysql-community-server
 
+# Enable and Start MySQL Service
 systemctl enable mysqld.service
-systemctl start mysqld.service 
+systemctl start mysqld.service
+
+# Get the temporary password
+cat| grep 'temporary password' /var/log/mysqld.log 
 
 # Changing default authentication settings
 cat >/etc/my.cnf <<EOL
