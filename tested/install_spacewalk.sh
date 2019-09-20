@@ -16,7 +16,7 @@ firewall-cmd --permanent --add-port=5222/tcp --add-port=5269/tcp --add-port=69/u
 firewall-cmd --reload
 
 # Install Spacewalk Database
-yum -y install spacewalk-setup-postgresql
+yum install -y spacewalk-setup-postgresql
 yum install -y spacewalk-postgresql
 
 # Configure Spacewalk

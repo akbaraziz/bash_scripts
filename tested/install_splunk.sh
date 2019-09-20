@@ -25,4 +25,4 @@ sudo /opt/splunk/bin/splunk start
 sudo /opt/splunk/bin/splunk enable boot-start
 
 # URL for application
-echo http://$hostname:8000
+echo "http://$HOSTNAME:8000"

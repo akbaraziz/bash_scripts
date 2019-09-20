@@ -3,7 +3,7 @@
 set -ex
 
 # Install yum-cron
-sudo yum install yum-cron -y
+sudo yum install -y yum-cron
 
 # Enable and Start Service
 sudo systemctl enable yum-cron

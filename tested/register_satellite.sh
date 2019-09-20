@@ -8,4 +8,4 @@ echo
 echo
 
 # Check license used by host
-subscriptionmanager list --consumed
+subscription-manager list --consumed

@@ -13,7 +13,7 @@ sudo rpm -Uvh http://spacewalk.lab.local/pub/rhn-org-trusted-ssl-cert-1.0-1.noar
 sudo rhnreg_ks --serverUrl=https://spacewalk.lab.local/XMLRPC --sslCACert=/usr/share/rhn/RHN-ORG-TRUSTED-SSL-CERT --activationkey=1-e7fed2c2d84e1329ba58462706ad39a5
 sudo systemctl enable rhnsd && systemctl start rhnsd
 
-# Disable Other External Repos
+# Disable Other External CentOS Repos
 sudo sed -i 's/enabled=1/enabled=0/g' /etc/yum.repos.d/C*
 sudo mv /etc/yum.repos.d/CentOS-Debuginfo.repo /etc/yum.repos.d/CentOS-Debuginfo.repo.orig
 sudo mv /etc/yum.repos.d/CentOS-CR.repo /etc/yum.repos.d/CentOS-CR.repo.orig

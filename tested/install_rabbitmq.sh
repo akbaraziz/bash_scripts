@@ -5,7 +5,7 @@ set -ex
 MQ_VER=3.7.15-1.el7
 ER_VER=21.3.8.1-1.el7
 MQ_ADMIN=mqadmin
-MQ_ADMIN_PASSWORD=nutanix/4u
+MQ_ADMIN_PASSWORD=P@ssword1
 
 # Dowloading the RabbitMQ Repo Key
 wget https://github.com/rabbitmq/signing-keys/releases/download/2.0/rabbitmq-release-signing-key.asc

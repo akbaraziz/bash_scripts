@@ -40,7 +40,7 @@ else
 fi
 
 # Remove Existing Version of Docker
-sudo yum remove docker docker-client docker-client-latest docker-common docker-latest docker-latest-logrotate docker-logrotate docker-selinux docker-engine-selinux docker-engine
+sudo yum remove -y docker docker-client docker-client-latest docker-common docker-latest docker-latest-logrotate docker-logrotate docker-selinux docker-engine-selinux docker-engine
 
 # Remove Existing Docker Repo
 sudo rm /etc/yum.repos.d/docker*.repos

@@ -7,7 +7,7 @@ rpm -Uvh https://dev.mysql.com/get/mysql-community-server-8.0.17-1.el7.x86_64.rp
 
 
 # Install OpenJDK 8
-sudo yum -y install java-1.8.0-openjdk
+sudo yum install -y java-1.8.0-openjdk
 
 # Set JAVA_HOME
 export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk

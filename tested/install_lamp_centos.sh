@@ -100,7 +100,7 @@ EOF
     # Start install MariaDB
     echo "Installing MariaDB server ..."
     sleep 1
-    yum install MariaDB-server MariaDB-client -y
+    yum install -y MariaDB-server MariaDB-client
 
     # Enable and start mysql service
     systemctl enable mariadb
@@ -109,11 +109,11 @@ EOF
     sleep 1
 
     ########## INSTALL PHP7 ##########
-    yum install epel-release -y
-    yum install http://rpms.remirepo.net/enterprise/remi-release-7.rpm -y
-    yum install yum-utils -y
+    yum install -y epel-release
+    yum install -y http://rpms.remirepo.net/enterprise/remi-release-7.rpm
+    yum install -y yum-utils
     yum-config-manager --enable remi-php72
-    yum install php php-mcrypt php-cli php-gd php-curl php-mysql php-ldap php-zip php-fileinfo php-pear -y
+    yum install -y php php-mcrypt php-cli php-gd php-curl php-mysql php-ldap php-zip php-fileinfo php-pear
 
     # Config to fix error Apache not load PHP file
     chown -R apache:apache /var/www

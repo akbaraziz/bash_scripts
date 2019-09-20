@@ -21,7 +21,7 @@ sslcacert=/etc/pki/tls/certs/ca-bundle.crt
 EOL
 
 #Install Grafana
-sudo yum install grafana -y
+sudo yum install -y grafana
 
 #Starting Grafana
 sudo systemctl daemon-reload

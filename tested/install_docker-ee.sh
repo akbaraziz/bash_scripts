@@ -22,7 +22,7 @@ else
 fi
 
 #Remove Existing Version of Docker
-sudo yum remove docker docker-client docker-client-latest docker-common docker-latest docker-latest-logrotate docker-logrotate docker-selinux docker-engine-selinux docker-engine
+sudo yum remove -y docker docker-client docker-client-latest docker-common docker-latest docker-latest-logrotate docker-logrotate docker-selinux docker-engine-selinux docker-engine
 
 #Remove Existing Docker Repo
 sudo rm /etc/yum.repos.d/docker*.repos
@@ -34,7 +34,7 @@ sudo sh -c 'echo "7" > /etc/yum/vars/dockerosversion'
 sudo yum install -y yum-utils device-mapper-persistent-date lvm2
 sudo yum-config-manager --enable rhel-7-server-extras-rpms
 sudo -E yum-config-manager --add-repo "$DOCKERURL/rhel/docker-ee.repo"
-sudo yum -y install docker-ee docker-ee-cli containerd.io
+sudo yum install -y docker-ee docker-ee-cli containerd.io
 
 # Setup daemon
 sudo cat > /etc/docker/daemon.json <<EOL
