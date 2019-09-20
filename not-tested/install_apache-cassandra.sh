@@ -3,8 +3,8 @@
 set -ex
 
 # Install Java
-sudo yum remove java -y
-sudo yum install java-1.8.0-openjdk-devel
+sudo yum remove -y java
+sudo yum install -y java-1.8.0-openjdk java-1.8.0-openjdk-devel
 
 # Create Cassandra Repository
 cat >/etc/yum.repos.d/cassandra.repo <<EOL
@@ -17,7 +17,7 @@ gpgkey=https://www.apache.org/dist/cassandra/KEYS
 EOL
 
 # Install Cassandra
-sudo yum install cassandra
+sudo yum install -y cassandra
 
 # Enable and Start Cassandra
 sudo systemctl enable cassandra

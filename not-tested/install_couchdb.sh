@@ -13,7 +13,7 @@ enabled=1
 EOL
 
 # Install CouchDB
-sudo yum install couchdb
+sudo yum install -y couchdb
 
 # Enable and Start CouchDB
 sudo systemctl start couchdb
@@ -28,4 +28,4 @@ EOL
 # Restart CouchDB Service
 sudo systemctl restart couchdb
 
-echo App URL: http://$hostname:5984/_utils
+echo App URL: "http://$HOSTNAME:5984/_utils"

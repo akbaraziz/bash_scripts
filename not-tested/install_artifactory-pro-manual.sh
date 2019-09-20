@@ -2,8 +2,9 @@
 
 set -ex  
 
-# Install OpenJava version 8
-yum install -y java-1.8.0-openjdk java-1.8.0-openjdk-devel
+# Install Java
+sudo yum remove -y java
+sudo yum install -y java-1.8.0-openjdk java-1.8.0-openjdk-devel
 
 export JAVA_HOME=$(dirname $(dirname $(readlink $(readlink $(which javac)))))
 source ~/.bashrc
@@ -30,7 +31,7 @@ wget https://bintray.com/jfrog/artifactory-pro-rpms/rpm -O bintray-jfrog-artifac
 
 sudo mv bintray-jfrog-artifactory-pro-rpms.repo /etc/yum.repos.d/
 
-yum install jfrog-artifactory-pro -y
+yum install -y jfrog-artifactory-pro
 
 # Set Artifactory Home
 echo "export ARTIFACTORY_HOME=/opt/jfrog/artifactory" | sudo tee -a /etc/profile
