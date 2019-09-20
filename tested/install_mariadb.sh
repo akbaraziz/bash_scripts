@@ -16,10 +16,10 @@ EOL
 sudo yum install -y MariaDB-server galera MariaDB-client MariaDB-shared MariaDB-backup MariaDB-common
 
 # Start MariaDB
-systemctl start mariadb
+sudo systemctl start mariadb
 
 # Enable MariaDb Service
-systemctl enable mariadb
+sudo systemctl enable mariadb
 
 # Secure MariaDB Installation
-mysql_secure_installation
+sudo mysql_secure_installation
