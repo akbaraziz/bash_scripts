@@ -15,7 +15,7 @@
 # Website:  https://lamp.sh
 # Github:   https://github.com/teddysun/lamp
 #
-# You must to modify the config before run it!!!
+# You must modify the config before running it!!!
 # Backup MySQL/MariaDB/Percona datebases, files and directories
 # Backup file is encrypted with AES256-cbc with SHA1 message-digest (option)
 # Auto transfer backup file to Google Drive (need install gdrive command) (option)
