@@ -7,25 +7,24 @@ setenforce 0
 sed -i --follow-symlinks 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/sysconfig/selinux
 
 # Disable swap
-# does the swap file exist?
-grep -q "swapfile" /etc/fstab
+swapoff -a
+sed -i '/ swap/ s/^/#/' /etc/fstab
 
-# if it does then remove it
-if [ $? -eq 0 ]; then
-	echo 'swapfile found. Removing swapfile.'
-	sed -i '/swapfile/d' /etc/fstab
-	echo "3" > /proc/sys/vm/drop_caches
-	swapoff -a
-	rm -f /swapfile
+# Remove Existing Version of Docker if installed
+# Check for existing version of Docker and remove if found
+if rpm -qa | grep -q docker*; then
+    yum remove -y docker*;
 else
-	echo 'No swapfile found. No changes made.'
+    echo Not Installed
 fi
 
-# Remove Existing Version of Docker
-sudo yum remove -y docker docker-client docker-client-latest docker-common docker-latest docker-latest-logrotate docker-logrotate docker-selinux docker-engine-selinux docker-engine
-
-# Remove Existing Docker Repo
-sudo rm /etc/yum.repos.d/docker*.repos
+# Remove Existing Docker Repo if exists
+FILE=/etc/yum.repos.d/docker*.repo
+if [ -f "$FILE" ]; then
+    rm /etc/yum.repos.d/docker*.repo;
+else
+    echo "$FILE does not exist"
+fi
 
 #Install Docker CE
 sudo yum install -y yum-utils device-mapper-persistent-data lvm2
@@ -39,6 +38,7 @@ yum-config-manager \
 yum install -y docker-ce
 
 # Setup daemon
+sudo mkdir -p /etc/docker
 sudo cat >/etc/docker/daemon.json <<EOL
 {
   "exec-opts": ["native.cgroupdriver=systemd"],
