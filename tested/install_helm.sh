@@ -14,5 +14,11 @@ sudo kubectl create clusterrolebinding tiller --clusterrole cluster-admin --serv
 
 sudo helm init --service-account tiller
 sudo kubectl create namespace kubeapps
-#sudo helm install --name kubeapps --namespace kubeapps bitnami/kubeapps
 
+sudo helm repo add stable https://kubernetes-charts.storage.googleapis.com/
+
+# Install a Helm Chart
+sudo helm install stable/kubernetes-dashboard
+
+# Check if Helm Service is running
+sudo kubectl get services
