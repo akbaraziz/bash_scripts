@@ -15,10 +15,8 @@ EOL
 # Install MariaDB and Components
 sudo yum install -y MariaDB-server galera MariaDB-client MariaDB-shared MariaDB-backup MariaDB-common
 
-# Start MariaDB
+# Enable and Start MariaDB
 sudo systemctl start mariadb
-
-# Enable MariaDb Service
 sudo systemctl enable mariadb
 
 # Secure MariaDB Installation

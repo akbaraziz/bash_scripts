@@ -2,8 +2,10 @@
 
 set -ex
 
+MYSQL_VER=
+
 # Create MySQL Community Edition Repository
-rpm -Uvh https://dev.mysql.com/get/mysql-community-server-8.0.17-1.el7.x86_64.rpm
+rpm -Uvh https://dev.mysql.com/get/mysql-community-server-${MYSQL_VER}.el7.x86_64.rpm
 
 
 # Install OpenJDK 8

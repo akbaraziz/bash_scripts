@@ -3,6 +3,8 @@
 
 set -ex
 
+DOMAIN=
+
 # Create NGINX Red Hat 7 Repository
 cat > /etc/yum.repos.d/nginx.repo <<EOL
 [nginx]
@@ -24,13 +26,9 @@ EOL
 # Install NGINX
 yum install -y nginx
 
-# Start NGINX Service
+# Enable and Start NGINX Service
 systemctl start nginx 
-
-# Enable NGINX Service
 systemctl enable NGINX
-
-DOMAIN=test
 
 # Configure NGINX
 mkdir -p /var/www/$DOMAIN
@@ -48,5 +46,15 @@ server {
     }
 }
 EOL
+
+# Add Firewall Rules if Running
+if [ `systemctl is-active firewalld` ]
+then
+    firewall-cmd --permanent --zone public --add-service http
+    firewall-cmd --permanent --zone public --add-service https
+    firewall-cmd --reload
+else
+    firewall_status=inactive
+fi
 
 nginx -s reload

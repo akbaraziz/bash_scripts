@@ -2,15 +2,17 @@
 
 set -ex
 
+SW_HOSTNAME=
+
 # Install Pre-Reqs
 sudo rpm -Uvh http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 sudo yum -y install rhn-client-tools rhn-check rhn-setup rhnsd m2crypto yum-rhn-plugin
 
 # Install Spacewalk Server Certificate:
-sudo rpm -Uvh http://spacewalk.lab.local/pub/rhn-org-trusted-ssl-cert-1.0-1.noarch.rpm
+sudo rpm -Uvh http://${SW_HOSTNAME}/pub/rhn-org-trusted-ssl-cert-1.0-1.noarch.rpm
 
 # Register Client with Spacewalk Server
-sudo rhnreg_ks --serverUrl=https://spacewalk.lab.local/XMLRPC --sslCACert=/usr/share/rhn/RHN-ORG-TRUSTED-SSL-CERT --activationkey=1-e7fed2c2d84e1329ba58462706ad39a5
+sudo rhnreg_ks --serverUrl=https://${SW_HOSTNAME}/XMLRPC --sslCACert=/usr/share/rhn/RHN-ORG-TRUSTED-SSL-CERT --activationkey=1-e7fed2c2d84e1329ba58462706ad39a5
 sudo systemctl enable rhnsd && systemctl start rhnsd
 
 # Disable Other External CentOS Repos

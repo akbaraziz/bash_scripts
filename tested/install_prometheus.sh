@@ -2,6 +2,8 @@
 
 set -ex
 
+VERSION=$(curl https://raw.githubusercontent.com/prometheus/prometheus/master/VERSION)
+
 # Make prometheus user
 sudo adduser --no-create-home --shell /bin/false prometheus
 
@@ -15,7 +17,7 @@ sudo touch /etc/prometheus/prometheus.rules.yml
 sudo chown -R prometheus:prometheus /etc/prometheus
 sudo chown prometheus:prometheus /var/lib/prometheus
 
-# Firewall Rules
+# Add Firewall Rules if Running
 if [ `systemctl is-active firewalld` ]
 then
     firewall-cmd --zone=public --add-port=9090/tcp --permanent && firewall-cmd --reload
@@ -24,8 +26,6 @@ else
 fi
 
 # Download prometheus and copy utilities to where they should be in the filesystem
-#VERSION=2.11.1
-VERSION=$(curl https://raw.githubusercontent.com/prometheus/prometheus/master/VERSION)
 wget https://github.com/prometheus/prometheus/releases/download/v${VERSION}/prometheus-${VERSION}.linux-amd64.tar.gz
 tar xvzf prometheus-${VERSION}.linux-amd64.tar.gz
 

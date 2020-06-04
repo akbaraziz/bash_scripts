@@ -2,11 +2,11 @@
 
 set -ex
 
-#Dowload the GPG Key
+# Dowload the Grafana GPG Key
 wget https://packages.grafana.com/gpg.key
 sudo mv ./gpg.key /etc/pki/rpm-gpg/gpg.key
 
-#Adding Grafana Repository
+# Add Grafana Repository
 sudo cat > /etc/yum.repos.d/grafana.repo <<EOL
 [grafana]
 name=grafana
@@ -20,20 +20,22 @@ sslverify=1
 sslcacert=/etc/pki/tls/certs/ca-bundle.crt
 EOL
 
-#Install Grafana
+# Install Grafana
 sudo yum install -y grafana
 
-#Starting Grafana
-sudo systemctl daemon-reload
-sudo systemctl start grafana-server
-
-#Enable Service to Start on Boot
-sudo systemctl enable grafana-server.service
-
+# Add Firewall Rules if Running
 if [ `systemctl is-active firewalld` ]
 then
-    firewall-cmd --zone=public --add-port=3000/tcp --permanent && firewall-cmd --reload
+    firewall-cmd --zone=public --add-port=3000/tcp --permanent
+    firewall-cmd --reload
 else
     firewall_status=inactive
 fi
+
+# Enable and Start Grafana
+sudo systemctl daemon-reload
+sudo systemctl start grafana-server
+sudo systemctl enable grafana-server.service
+
+
 

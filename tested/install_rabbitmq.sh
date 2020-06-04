@@ -38,16 +38,20 @@ EOL
 # Installing RabbitMQ
 sudo yum install rabbitmq-server-$MQ_VER -y
 
-# Configuring Firewall Rules
-firewall-cmd --zone=public --permanent --add-port=4369/tcp --add-port=25672/tcp --add-port=5671-5672/tcp --add-port=15672/tcp  --add-port=61613-61614/tcp --add-port=1883/tcp --add-port=8883/tcp
-sudo firewall-cmd --reload
+# Add Firewall Rules if Running
+if [ `systemctl is-active firewalld` ]
+then
+    firewall-cmd --zone=public --permanent --add-port=4369/tcp --add-port=25672/tcp --add-port=5671-5672/tcp --add-port=15672/tcp  --add-port=61613-61614/tcp --add-port=1883/tcp --add-port=8883/tcp
+    firewall-cmd --reload
+else
+    firewall_status=inactive
+fi
 
-#Starting RabbitMQ Service
+# Enable and Start RabbitMQ Service
 systemctl start rabbitmq-server
-
-# Enabling Auto Start on Boot
 systemctl enable rabbitmq-server
 
+# Configure Management Console
 echo "Enable RabbitMQ Management Console..."
 rabbitmq-plugins enable rabbitmq_management
 chown -R rabbitmq:rabbitmq /var/lib/rabbitmq/

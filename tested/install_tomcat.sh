@@ -2,6 +2,8 @@
 
 set -ex
 
+TOMCAT_VER=9.0.35
+
 # Install Pre-Reqs
 sudo yum install java-1.8.0-openjdk
 
@@ -9,13 +11,13 @@ sudo yum install java-1.8.0-openjdk
 sudo useradd -m -U -d /opt/tomcat -s /bin/false tomcat
 
 # Download and Extract Tomcat
-cd /tmp
-wget https://www-eu.apache.org/dist/tomcat/tomcat-9/v9.0.26/bin/apache-tomcat-9.0.26.tar.gz
-tar -xf apache-tomcat-9.0.26.tar.gz
+cd /var/tmp
+wget http://www.gtlib.gatech.edu/pub/apache/tomcat/tomcat-9/v${TOMCAT_VER}/bin/apache-tomcat-${TOMCAT_VER}.zip
+tar -xf apache-tomcat-${TOMCAT_VER}.tar.gz
 
 # Move Source File
-sudo mv apache-tomcat-9.0.26 /opt/tomcat/
-sudo ln -s /opt/tomcat/apache-tomcat-9.0.26 /opt/tomcat/latest
+sudo mv apache-tomcat-${TOMCAT_VER} /opt/tomcat/
+sudo ln -s /opt/tomcat/apache-tomcat-${TOMCAT_VER} /opt/tomcat/latest
 
 # Configure Tomcat Web Management Interface
 sudo cat >/opt/tomcat/latest/conf/tomcat-users.xml <<EOL
@@ -59,9 +61,15 @@ sudo systemctl daemon-reload
 sudo systemctl enable tomcat
 sudo systemctl start tomcat
 
-# Firewall Rules
-sudo firewall-cmd --zone=public --permanent --add-port=8080/tcp
-sudo firewall-cmd --reload
+# Add Firewall Rules if Running
+if [ `systemctl is-active firewalld` ]
+then
+    firewall-cmd --zone=public --permanent --add-port=8080/tcp
+    firewall-cmd --reload
+else
+    firewall_status=inactive
+fi
 
-# URL
-echo "http://$HOSTNAME:8080"
+
+# Tomcat URL
+echo "Application URL - http://$HOSTNAME:8080"

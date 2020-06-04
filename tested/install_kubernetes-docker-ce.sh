@@ -2,62 +2,96 @@
 
 set -ex
 
-#### This script will reboot the target when completed. Please use caution ####
+HOST_NAME=
+IPADDR=
 
-# Disable SELinux
-setenforce 0
-sed -i --follow-symlinks 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/sysconfig/selinux
+KUBE_SERVER_URL=https://dl.k8s.io/v1.18.0/kubernetes-server-linux-amd64.tar.gz
+KUBE_NODE_URL=https://dl.k8s.io/v1.18.0/kubernetes-node-linux-amd64.tar.gz
+FLANNEL_URL=https://raw.githubusercontent.com/coreos/flannel/master/Documentation
+EPEL_URL=https://dl.fedoraproject.org/pub/epel
+DOCKER_URL=https://download.docker.com/linux/centos/docker-ce.repo
 
-# Disable Firewall
-systemctl disable firewalld
-systemctl stop firewalld
+KUBE_NETWORK=10.244.0.0/16
 
-# Enable br_netfilter Kernel Module"
-modprobe overlay
-modprobe br_netfilter
-# Setup required sysctl params, these persist across reboots.
-cat > /etc/sysctl.d/99-kubernetes-cri.conf <<EOF
-net.bridge.bridge-nf-call-iptables  = 1
-net.ipv4.ip_forward                 = 1
-net.bridge.bridge-nf-call-ip6tables = 1
+# Change Host Name
+sudo hostnamectl set-hostname ${HOST_NAME}
+
+sudo echo ${HOST_NAME} | tee /etc/hostname
+sudo sed -i -E 's/^127.0.1.1.*/127.0.1.1\t'"${HOST_NAME}"'/' /etc/hosts
+sudo sed -i -E 's/^127.0.1.1.*/127.0.1.1\t'"${HOST_NAME}"'/' /etc/sysconfig/network
+sudo echo -e ""${IPADDR}" \t "${HOST_NAME}"" >> /etc/hosts
+
+# Create EPEL Repository
+yum install -y ${EPEL_URL}/epel-release-latest-7.noarch.rpm
+
+# Create Docker Repo
+yum-config-manager --add-repo $DOCKER_URL
+
+
+# Create Kubernetes Repo
+cat <<EOF > /etc/yum.repos.d/kubernetes.repo
+[kubernetes]
+name=Kubernetes
+baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+enabled=1
+gpgcheck=1
+repo_gpgcheck=1
+gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg
+       https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
 EOF
 
-sysctl --system
-
 # Disable swap
-# does the swap file exist?
-grep -q "swapfile" /etc/fstab
+swapoff -a
+sed -i '/ swap/ s/^/#/' /etc/fstab
 
-# if it does then remove it
-if [ $? -eq 0 ]; then
-	echo 'swapfile found. Removing swapfile.'
-	sed -i '/swapfile/d' /etc/fstab
-	echo "3" > /proc/sys/vm/drop_caches
-	swapoff -a
-	rm -f /swapfile
+# Disable Firewall
+systemctl disable firewalld 
+systemctl stop firewalld
+
+# Enable IPTables 
+yum install -y --quiet iptables-services.x86_64
+systemctl start iptables
+systemctl enable iptables
+systemctl unmask iptables
+iptables -F
+service iptables save
+
+# Configure IPTables to see Bridged Traffic
+cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+EOF
+sudo sysctl --system
+
+# Set SELinux in permissive mode
+setenforce 0
+sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
+
+# Install Docker Pre-Reqs
+yum install -y --quiet yum-utils device-mapper-persistent-data lvm2 container-selinux iscsi-initiator-utils socat
+
+# Remove Existing Version of Docker if installed
+# Check for existing version of Docker and remove if found
+if rpm -qa | grep -q docker*; then
+    yum remove -y docker*;
 else
-	echo 'No swapfile found. No changes made.'
+    echo Not Installed
 fi
 
-# Remove Existing Version of Docker
-sudo yum remove -y docker docker-client docker-client-latest docker-common docker-latest docker-latest-logrotate docker-logrotate docker-selinux docker-engine-selinux docker-engine
+# Remove Existing Docker Repo if exists
+FILE=/etc/yum.repos.d/docker*.repo
+if [ -f "$FILE" ]; then
+    rm /etc/yum.repos.d/docker*.repo;
+else
+    echo "$FILE does not exist"
+fi
 
-# Remove Existing Docker Repo
-sudo rm /etc/yum.repos.d/docker*.repos
-
-# Install Docker CE
-sudo yum install -y yum-utils device-mapper-persistent-data lvm2
-
-# Create Docker Repository
-yum-config-manager \
-  --add-repo \
-  https://download.docker.com/linux/centos/docker-ce.repo
-
-# Install Docker CE.
-yum install -y docker-ce
+# Install Docker
+yum install -y docker-ce docker-ce-cli containerd.io
 
 # Setup daemon
-sudo cat >/etc/docker/daemon.json <<EOL
+mkdir -p /etc/docker
+cat >/etc/docker/daemon.json <<EOL
 {
   "exec-opts": ["native.cgroupdriver=systemd"],
   "log-driver": "json-file",
@@ -71,51 +105,31 @@ sudo cat >/etc/docker/daemon.json <<EOL
 }
 EOL
 
-# Configure Docker Cgroup Driver
-sed -i '/^ExecStart/ s/$/ --exec-opt native.cgroupdriver=systemd/' /usr/lib/systemd/system/docker.service 
-
-# Restart Docker
-sudo systemctl daemon-reload
-sudo systemctl restart docker
-
-# Enable Docker on Start
-sudo systemctl enabled docker
-
-# Post Install Steps
-sudo groupadd docker
-sudo usermod -aG docker $USER
-
-
-# Add Kubernetes Repo
-cat <<EOF > /etc/yum.repos.d/kubernetes.repo
-[kubernetes]
-name=Kubernetes
-baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
-enabled=1
-gpgcheck=1
-repo_gpgcheck=1
-gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg
-        https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
-EOF
-
 # Install Kubernetes
-yum install -y kubelet kubeadm kubectl etcd
+yum install -y kubelet kubeadm kubectl –disableexcludes=kubernetes
+
+# Enable and Start Services
+systemctl enable docker
+systemctl enable kubelet
+systemctl start docker
+systemctl start kubelet
+
+# Enable bash completion for both
+kubeadm completion bash > /etc/bash_completion.d/kubeadm
+kubectl completion bash > /etc/bash_completion.d/kubectl
+
+# activate the completion
+. /etc/profile
 
 
-# Install CRI-O
-# Install prerequisites
-yum-config-manager --add-repo=https://cbs.centos.org/repos/paas7-crio-311-candidate/x86_64/os/
+# Initialize Kubernetes Master
+kubeadm init --pod-network-cidr=${KUBE_NETWORK}
 
-# Install CRI-O
-#yum install -y --nogpgcheck cri-o
-#ln -s /usr/sbin/runc /usr/bin/runc
+# Cluster Configure
+mkdir -p $HOME/.kube
+cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+chown $(id -u):$(id -g) $HOME/.kube/config
 
-# Starting Kubernetes
-systemctl start docker && systemctl enable docker
-systemctl start kubelet && systemctl enable kubelet
-#systemctl start crio && systemctl enable crio
+# Get Flannel Config file
+kubectl apply -f ${FLANNEL_URL}/kube-flannel.yml 
 
-# Changing the cgroup-driver to systemd
-#sed -i 's/cgroup-driver=systemd/cgroup-driver=cgroupfs/g' /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
-
-#reboot
