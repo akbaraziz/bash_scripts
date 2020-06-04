@@ -4,14 +4,13 @@ set -ex
 
 HOST_NAME=
 IPADDR=
+KUBE_NETWORK=10.244.0.0/16
 
 KUBE_SERVER_URL=https://dl.k8s.io/v1.18.0/kubernetes-server-linux-amd64.tar.gz
 KUBE_NODE_URL=https://dl.k8s.io/v1.18.0/kubernetes-node-linux-amd64.tar.gz
 FLANNEL_URL=https://raw.githubusercontent.com/coreos/flannel/master/Documentation
 EPEL_URL=https://dl.fedoraproject.org/pub/epel
 DOCKER_URL=https://download.docker.com/linux/centos/docker-ce.repo
-
-KUBE_NETWORK=10.244.0.0/16
 
 # Change Host Name
 sudo hostnamectl set-hostname ${HOST_NAME}
