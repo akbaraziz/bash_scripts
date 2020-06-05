@@ -1,4 +1,9 @@
 #!/bin/bash
+# To add firewall to Linux systems running Centos and Redhat
+# Created by: Akbar Aziz
+# Date: 06/05/2020
+# Version: 1.0
+
 
 set -ex
 

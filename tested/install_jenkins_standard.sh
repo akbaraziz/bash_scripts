@@ -1,4 +1,8 @@
 #!/bin/bash
+# To install Jenkins on CentOS and Redhat 7 systems.
+# Created by: Akbar Aziz
+# Date: 06/05/2020
+# Version: 1.0
 
 set -ex
 

@@ -1,4 +1,8 @@
 #!/bin/bash
+# To idenitfy running OS on a linux system.
+# Created by: Akbar Aziz
+# Date: 06/05/2020
+# Version: 1.0
 
 set -ex
 

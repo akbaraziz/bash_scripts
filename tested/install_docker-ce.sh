@@ -1,4 +1,9 @@
 #!/bin/bash
+# To install Docker CE on CentOS and Redhat 7 systems.
+# Created by: Akbar Aziz
+# Date: 06/05/2020
+# Version: 1.0
+
 
 set -ex
 

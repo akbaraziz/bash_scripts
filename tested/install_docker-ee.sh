@@ -1,6 +1,13 @@
 #!/bin/bash
+# To install Docker EE on CentOS and Redhat 7 systems. Must have Docker Hub URL for your repository.
+# Created by: Akbar Aziz
+# Date: 06/05/2020
+# Version: 1.0
+
 
 set -ex
+
+DOCKER_URL=
 
 #Disable SELinux
 setenforce 0
@@ -28,7 +35,7 @@ sudo yum remove -y docker docker-client docker-client-latest docker-common docke
 sudo rm /etc/yum.repos.d/docker*.repos
 
 #Install Docker EE
-export DOCKERURL=""
+export DOCKERURL="{DOCKER_URL}"
 sudo -E sh -c 'echo "$DOCKERURL/rhel" > /etc/yum/vars/dockerurl'
 sudo sh -c 'echo "7" > /etc/yum/vars/dockerosversion'
 sudo yum install -y yum-utils device-mapper-persistent-date lvm2

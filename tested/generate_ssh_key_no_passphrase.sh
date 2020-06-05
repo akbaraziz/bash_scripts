@@ -1,4 +1,9 @@
 #!/bin/bash
+# To generate SSH keys with no passphrase and no user input on linux systems.
+# Created by: Akbar Aziz
+# Date: 06/05/2020
+# Version: 1.0
+
 
 set -ex
 

@@ -1,4 +1,8 @@
 #!/bin/bash
+# To install Grafana on linux systems.
+# Created by: Akbar Aziz
+# Date: 06/05/2020
+# Version: 1.0
 
 set -ex
 

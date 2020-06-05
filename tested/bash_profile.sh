@@ -1,4 +1,9 @@
 #!/bin/bash
+# To create customized profiles with different aliases when using bash shell
+# Created by: Akbar Aziz
+# Date: 06/05/2020
+# Version: 1.0
+
 
 set -ex
 

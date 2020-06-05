@@ -1,4 +1,9 @@
 #!/bin/bash
+# To copy id_rsa.pub file to multiple servers defined in a list. "SSHPASS must be installed before executing."
+# Created by: Akbar Aziz
+# Date: 06/05/2020
+# Version: 1.0
+
 
 set -ex
 

@@ -1,4 +1,9 @@
 #!/bin/bash
+# To install Chef Server on Centos and Redhat 7 systems.
+# Created by: Akbar Aziz
+# Date: 06/05/2020
+# Version: 1.0
+
 
 set -ex
 

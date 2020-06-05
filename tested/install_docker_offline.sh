@@ -1,8 +1,11 @@
-#!/bin/bash
+##!/bin/bash
+# To install Docker in Dark Site (no internet access). Some files will need to be downloaded before starting.
+# Created by: Akbar Aziz
+# Date: 06/05/2020
+# Version: 1.0
+
 
 set -ex
-
-##This script is used to install Kubernetes on Dark Sites (No Internet)
 
 ##First - Download the files on a system that has Internet Access
 # Install EPEL Repo

@@ -1,4 +1,9 @@
-#!/bin/sh
+#!/bin/bash
+# To check is a user exists on systems running Centos and Redhat. Requires user input.
+# Created by: Akbar Aziz
+# Date: 06/05/2020
+# Version: 1.0
+
 
 set -ex
 
