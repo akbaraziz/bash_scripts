@@ -1,6 +1,6 @@
 #!/bin/bash
 # Script author: Akbar Aziz
-# Script site: https://github.com/akbaraziz/bash_scripts
+# Script site: https://github.com/akbaraziz/bash_scripts/blob/master/tested/add_firewall_rules.sh
 # Script date: 06/05/2020
 # Script ver: 1.0
 # Script purpose: To add firewall rules for Port 22, 80 and 443. 
