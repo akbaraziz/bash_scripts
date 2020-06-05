@@ -1,8 +1,11 @@
 #!/bin/bash
-# To add firewall to Linux systems running Centos and Redhat
-# Created by: Akbar Aziz
-# Date: 06/05/2020
-# Version: 1.0
+# Script author: Akbar Aziz
+# Script site: https://github.com/akbaraziz/bash_scripts
+# Script date: 06/05/2020
+# Script ver: 1.0
+# Script purpose: To add firewall rules for Port 22, 80 and 443. 
+# Script tested on OS: CentOS and Redhat 7.x
+#--------------------------------------------------
 
 
 set -ex
