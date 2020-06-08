@@ -1,29 +1,33 @@
 #!/bin/bash
+# Script author: Akbar Aziz
+# Script site: https://github.com/akbaraziz/bash_scripts
+# Script date: 06/05/2020
+# Script ver: 1.0
+# Script tested on OS: CentOS 7.x
+# Script purpose: To Install Prometheus on CentOS 7 system
+
+#--------------------------------------------------
 
 set -ex
 
 VERSION=$(curl https://raw.githubusercontent.com/prometheus/prometheus/master/VERSION)
 
+#Disable SELINUX
+setenforce 0
+sed -i --follow-symlinks 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/sysconfig/selinux
+
 # Make prometheus user
-sudo adduser --no-create-home --shell /bin/false prometheus
+sudo useradd --no-create-home --shell /bin/false prometheus
 
 # Make directories and dummy files necessary for prometheus
-sudo mkdir /etc/prometheus
-sudo mkdir /var/lib/prometheus
+sudo mkdir -p /etc/prometheus
+sudo mkdir -p /var/lib/prometheus
 sudo touch /etc/prometheus/prometheus.yml
 sudo touch /etc/prometheus/prometheus.rules.yml
 
 # Assign ownership of the files above to prometheus user
 sudo chown -R prometheus:prometheus /etc/prometheus
 sudo chown prometheus:prometheus /var/lib/prometheus
-
-# Add Firewall Rules if Running
-if [ `systemctl is-active firewalld` ]
-then
-    firewall-cmd --zone=public --add-port=9090/tcp --permanent && firewall-cmd --reload
-else
-    firewall_status=inactive
-fi
 
 # Download prometheus and copy utilities to where they should be in the filesystem
 wget https://github.com/prometheus/prometheus/releases/download/v${VERSION}/prometheus-${VERSION}.linux-amd64.tar.gz
@@ -79,7 +83,17 @@ sudo systemctl daemon-reload
 sudo systemctl enable prometheus
 sudo systemctl start prometheus
 
+# Add Firewall Rules if Running
+if [ `systemctl is-active firewalld` ]
+then
+    firewall-cmd --zone=public --add-port=9090/tcp --permanent && firewall-cmd --reload
+else
+    firewall_status=inactive
+fi
+
 # Installation cleanup
 rm prometheus-${VERSION}.linux-amd64.tar.gz
 rm -rf prometheus-${VERSION}.linux-amd64
 
+# Application Info
+echo "Prometheus URL: http://$hostname:9090/graph"
