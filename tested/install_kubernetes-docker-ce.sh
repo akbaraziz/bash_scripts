@@ -2,7 +2,7 @@
 # To install Kubernetes, Docker, Flannel on CentOS and Redhat 7 systems.
 # Created by: Akbar Aziz
 # Date: 06/05/2020
-# Version: 1.0
+# Version: 1.1
 
 set -ex
 
@@ -78,7 +78,7 @@ yum install -y --quiet yum-utils device-mapper-persistent-data lvm2 container-se
 if rpm -qa | grep -q docker*; then
     yum remove -y docker*;
 else
-    echo Not Installed
+    echo "Not Installed"
 fi
 
 # Remove Existing Docker Repo if exists
@@ -121,7 +121,7 @@ systemctl start kubelet
 kubeadm completion bash > /etc/bash_completion.d/kubeadm
 kubectl completion bash > /etc/bash_completion.d/kubectl
 
-# activate the completion
+# activate the bash completion
 . /etc/profile
 
 
