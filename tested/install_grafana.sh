@@ -28,6 +28,9 @@ sslverify=1
 sslcacert=/etc/pki/tls/certs/ca-bundle.crt
 EOL
 
+# Update System
+sudo yum update -y
+
 # Install Grafana
 sudo yum install -y grafana
 

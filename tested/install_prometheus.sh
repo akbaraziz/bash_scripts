@@ -57,10 +57,10 @@ scrape_configs:
 EOF
 sudo chown prometheus:prometheus /etc/prometheus/prometheus.yml
 
-# Prometheus Services
+# Create Prometheus as a Service
 cat <<EOF > /etc/systemd/system/prometheus.service
 [Unit]
-Description=Prometheus
+Description=Prometheus Server
 Wants=network-online.target
 After=network-online.target
  
