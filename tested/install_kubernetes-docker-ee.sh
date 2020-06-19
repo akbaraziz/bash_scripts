@@ -4,7 +4,7 @@
 # Script date: 06/19/2020
 # Script ver: 1.1
 # Script tested on OS: CentOS 7.x
-# Script purpose: To install Docker, Kubernetes, and Flannel
+# Script purpose: To install Docker EE, Kubernetes, and Flannel
 
 #--------------------------------------------------
 
@@ -106,7 +106,7 @@ else
 fi
 
 # Install Docker
-yum install -y docker-ee docker-ee-cli containerid.o
+yum install -y docker-ee docker-ee-cli containerid.o docker-ee-selinux
 
 # Setup daemon
 mkdir -p /etc/docker
