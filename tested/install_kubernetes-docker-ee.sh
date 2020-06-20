@@ -23,9 +23,8 @@ echo P@ssword1 | passwd --stdin "$kube_admin"
 
 # Content URL's
 FLANNEL_URL=https://raw.githubusercontent.com/coreos/flannel/master/Documentation
-DOCKER_URL="Enter your Docker HUB URL Here"
+DOCKER_URL=https://storebits.docker.com/ee/m/<dockersubscriptionnumber>
 EPEL_URL=https://dl.fedoraproject.org/pub/epel
-
 
 # Change Host Name
 sudo hostnamectl set-hostname ${HOST_NAME}
@@ -103,7 +102,7 @@ else
 fi
 
 # Install Docker
-sudo yum install -y --quiet docker-ce docker-ce-cli containerd.io
+sudo yum install -y --quiet docker-ee docker-ee-cli containerd.io
 
 # Setup daemon
 mkdir -p /etc/docker
@@ -139,7 +138,6 @@ kubectl completion bash > /etc/bash_completion.d/kubectl
 
 # Confirm Docker and Kubelet are running
 sudo systemctl is-active --quiet docker && echo "docker is running" || echo "docker is NOT running"
-
 
 # Pull Docker Images
 kubeadm config images pull
