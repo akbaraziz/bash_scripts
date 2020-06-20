@@ -135,7 +135,7 @@ kubectl completion bash > /etc/bash_completion.d/kubectl
 
 # Confirm Docker and Kubelet are running
 sudo systemctl is-active --quiet docker && echo "docker is running" || echo "docker is NOT running"
-# sudo systemctl is-active --quiet kubelet && echo "kubelet is running" || echo "kubelet is NOT running" 
+
 
 # Pull Docker Images
 kubeadm config images pull
