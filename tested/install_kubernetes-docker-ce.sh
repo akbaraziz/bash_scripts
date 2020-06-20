@@ -2,9 +2,9 @@
 # Script author: Akbar Aziz
 # Script site: https://github.com/akbaraziz/bash_scripts
 # Script date: 06/19/2020
-# Script ver: 1.1
+# Script ver: 1.0
 # Script tested on OS: CentOS 7.x
-# Script purpose: To install Docker, Kubernetes, and Flannel
+# Script purpose: To install Docker, Flannel, Kubernetes, Kubernetes Dashboard, Kubernetes Metric Server, and Helm Charts
 
 #--------------------------------------------------
 
@@ -14,16 +14,14 @@ set -ex
 HOST_NAME=`hostname -f`
 IPADDR=`ip route get 1 | awk '{print $NF;exit}'`
 KUBE_NETWORK=10.244.0.0/16
-KUBE_VER=v1.18.0
-kube_admin=kubeadmin 
 
-# Create new user with Sudo Rights
+kube_admin=k8admin # Account that will have permissions to run Kubernetes and also Kubernetes-Dashboard 
+
+# Create new Kubernetes user with sudo rights
 sudo useradd -G wheel $kube_admin
 echo P@ssword1 | passwd --stdin "$kube_admin"
 
 # Content URL's
-KUBE_SERVER_URL=https://dl.k8s.io/${KUBE_VER}/kubernetes-server-linux-amd64.tar.gz
-KUBE_NODE_URL=https://dl.k8s.io/${KUBE_VER}/kubernetes-node-linux-amd64.tar.gz
 FLANNEL_URL=https://raw.githubusercontent.com/coreos/flannel/master/Documentation
 EPEL_URL=https://dl.fedoraproject.org/pub/epel
 DOCKER_URL=https://download.docker.com/linux/centos/docker-ce.repo
@@ -53,6 +51,10 @@ repo_gpgcheck=1
 gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg
        https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
 EOF
+
+# Disable SELinux
+setenforce 0
+sed -i --follow-symlinks 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/sysconfig/selinux
 
 # Disable swap
 swapoff -a
@@ -97,7 +99,7 @@ else
 fi
 
 # Install Docker
-sudo yum install -y --quiet docker-ce docker-ce-cli containerd.io docker-ce-selinux
+sudo yum install -y --quiet docker-ce docker-ce-cli containerd.io
 
 # Setup daemon
 mkdir -p /etc/docker
@@ -116,7 +118,7 @@ cat >/etc/docker/daemon.json <<EOL
 EOL
 
 # Install Kubernetes
-sudo yum install -y kubelet kubeadm kubectl –disableexcludes=kubernetes
+sudo yum install -y --quiet kubelet kubeadm kubectl –disableexcludes=kubernetes
 
 # Enable and Start Services
 sudo systemctl enable docker
@@ -133,10 +135,13 @@ kubectl completion bash > /etc/bash_completion.d/kubectl
 
 # Confirm Docker and Kubelet are running
 sudo systemctl is-active --quiet docker && echo "docker is running" || echo "docker is NOT running"
-sudo systemctl is-active --quiet kubelet && echo "kubelet is running" || echo "kubelet is NOT running"
+# sudo systemctl is-active --quiet kubelet && echo "kubelet is running" || echo "kubelet is NOT running" 
+
+# Pull Docker Images
+kubeadm config images pull
 
 # Initialize Kubernetes Master
-sudo kubeadm init --apiserver-advertise-address=$IPADDR --pod-network-cidr=${KUBE_NETWORK}
+kubeadm init --apiserver-advertise-address=$IPADDR --pod-network-cidr=${KUBE_NETWORK}
 
 
 # Cluster Configure
@@ -149,7 +154,64 @@ sudo -u $kube_admin kubectl apply -f ${FLANNEL_URL}/kube-flannel.yml
 
 # Check status of Master Node
 sudo -u $kube_admin kubectl get nodes
-sleep 30
+sleep 10
 
 # Check status of Pods
 sudo -u $kube_admin kubectl get pods --all-namespaces
+
+# Install Kubernetes Metric Server
+sudo -u $kube_admin kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.3.6/components.yaml
+
+# Verify Metric Server Deployment
+sudo -u $kube_admin kubectl get deployment metrics-server -n kube-system
+
+# Create kubeadmin-service account
+sudo -u $kube_admin cat > /var/tmp/kubeadmin-service-account.yaml <<"EOF"
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: kubeadmin
+  namespace: kube-system
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: kubeadmin
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+- kind: ServiceAccount
+  name: kubeadmin
+  namespace: kube-system
+EOF
+
+# Apply the Service Account
+sudo -u $kube_admin kubectl apply -f /var/tmp/kubeadmin-service-account.yaml
+
+# Download and Install Helm Charts
+curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
+chmod 700 get_helm.sh
+./get_helm.sh
+
+# Add Helm Repo for Kubernetes Dashboard
+helm repo add stable https://kubernetes-charts.storage.googleapis.com
+
+# Install Kubernetes Dashboard
+sudo -u $kube_admin kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.1/aio/deploy/recommended.yaml
+#helm install kubernetes-dashboard stable/kubernetes-dashboard --set rbac.clusterAdminRole=true
+
+# Get Helm Services
+sudo -u $kube_admin kubectl get services
+
+# Get Cluster Info
+sudo -u $kube_admin kubectl cluster-info
+
+# Get Dashboard Token
+sudo -u $kube_admin kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep kubeadmin | awk '{print $1}')
+
+# Start Proxy for Kubernetes Dashboard
+sudo -u $kube_admin kubectl proxy &
+
+echo "End of Installation"
