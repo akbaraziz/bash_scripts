@@ -1,9 +1,14 @@
 #!/bin/bash
-# To install Docker CE on CentOS and Redhat 7 systems.
-# Created by: Akbar Aziz
-# Date: 06/05/2020
-# Version: 1.0
+# Script author: Akbar Aziz
+# Script site: https://github.com/akbaraziz/bash_scripts
+# Script date: 06/05/2020
+# Script ver: 1.0
+# Script tested on OS: CentOS 7.x
+# Script purpose: Install Docker CE
 
+#--------------------------------------------------
+
+set -ex
 
 set -ex
 
@@ -40,7 +45,7 @@ yum-config-manager \
   https://download.docker.com/linux/centos/docker-ce.repo
 
 ## Install Docker CE.
-yum install -y docker-ce
+yum install -y docker-ce docker-ce-cli
 
 # Setup daemon
 sudo mkdir -p /etc/docker
