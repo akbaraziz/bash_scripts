@@ -40,3 +40,6 @@ then
 else
     firewall_status=inactive
 fi
+
+# Get auth password from Jenkins
+echo "authpwd="$(sudo cat /var/lib/jenkins/secrets/initialAdminPassword)
