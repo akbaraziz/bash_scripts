@@ -8,6 +8,7 @@
 
 #--------------------------------------------------
 
+
 set -ex
 
 VERSION=$(curl https://raw.githubusercontent.com/prometheus/prometheus/master/VERSION)

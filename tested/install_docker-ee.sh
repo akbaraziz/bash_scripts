@@ -1,8 +1,12 @@
-#!/bin/bash
-# To install Docker EE on CentOS and Redhat 7 systems. Must have Docker Hub URL for your repository.
-# Created by: Akbar Aziz
-# Date: 06/05/2020
-# Version: 1.0
+s#!/bin/bash
+# Script author: Akbar Aziz
+# Script site: https://github.com/akbaraziz/bash_scripts
+# Script date: 06/05/2020
+# Script ver: 1.0
+# Script tested on OS: CentOS 7.x
+# Script purpose: Install Docker EE - Must supply the Docker Hub URL for your account
+
+#--------------------------------------------------
 
 
 set -ex
