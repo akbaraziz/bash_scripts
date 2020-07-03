@@ -1,13 +1,12 @@
 #!/bin/bash
 # Script author: Akbar Aziz
 # Script site: https://github.com/akbaraziz/bash_scripts
-# Script date: 06/05/2020
-# Script ver: 1.0
+# Script date: 07/02/2020
+# Script ver: 1.1
 # Script tested on OS: CentOS 7.x
 # Script purpose: Install NGINX
 
 #--------------------------------------------------
-
 
 set -ex
 
@@ -59,7 +58,6 @@ EOL
 if [ `systemctl is-active firewalld` ]
 then
     firewall-cmd --permanent --zone public --add-service http
-    firewall-cmd --permanent --zone public --add-service https
     firewall-cmd --reload
 else
     firewall_status=inactive

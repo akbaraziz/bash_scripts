@@ -1,4 +1,12 @@
 #!/bin/bash
+# Script author: Akbar Aziz
+# Script site: https://github.com/akbaraziz/bash_scripts
+# Script create date: 07/02/2020
+# Script ver: 1.0
+# Script tested on OS: CentOS 7.x
+# Script purpose: Set Hostname
+
+#--------------------------------------------------
 
 set -ex
 
@@ -19,7 +27,7 @@ echo "Changing hostname from $OLD_HOSTNAME to $NEW_HOSTNAME..."
 
 hostnamectl set-hostname "$NEW_HOSTNAME"
 
-#sed -i "s/HOSTNAME=.*/HOSTNAME=$NEW_HOSTNAME/g" /etc/sysconfig/network
+sed -i "s/HOSTNAME=.*/HOSTNAME=$NEW_HOSTNAME/g" /etc/sysconfig/network
 
 if [ -n "$( grep "$OLD_HOSTNAME" /etc/hosts )" ]; then
  sed -i "s/$OLD_HOSTNAME/$NEW_HOSTNAME/g" /etc/hosts
@@ -27,4 +35,4 @@ else
  echo -e "$( hostname -I | awk '{ print $1 }' )\t$NEW_HOSTNAME" >> /etc/hosts
 fi
 
-echo "Done."
+echo "Set system hostname to ${NEW_HOSTNAME}"

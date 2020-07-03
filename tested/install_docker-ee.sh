@@ -8,16 +8,11 @@ s#!/bin/bash
 
 #--------------------------------------------------
 
-
 set -ex
 
 DOCKER_URL=
 
-#Disable SELinux
-setenforce 0
-sed -i --follow-symlinks 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/sysconfig/selinux
-
-#Disable swap
+# Disable swap
 # does the swap file exist?
 grep -q "swapfile" /etc/fstab
 
@@ -32,13 +27,23 @@ else
 	echo 'No swapfile found. No changes made.'
 fi
 
-#Remove Existing Version of Docker
-sudo yum remove -y docker docker-client docker-client-latest docker-common docker-latest docker-latest-logrotate docker-logrotate docker-selinux docker-engine-selinux docker-engine
+# Remove Existing Version of Docker if installed
+# Check for existing version of Docker and remove if found
+if rpm -qa | grep -q docker*; then
+    yum remove -y docker*;
+else
+    echo Not Installed
+fi
 
-#Remove Existing Docker Repo
-sudo rm /etc/yum.repos.d/docker*.repos
+# Remove Existing Docker Repo if exists
+FILE=/etc/yum.repos.d/docker*.repo
+if [ -f "$FILE" ]; then
+    rm /etc/yum.repos.d/docker*.repo;
+else
+    echo "$FILE does not exist"
+fi
 
-#Install Docker EE
+# Install Docker EE
 export DOCKERURL="{DOCKER_URL}"
 sudo -E sh -c 'echo "$DOCKERURL/rhel" > /etc/yum/vars/dockerurl'
 sudo sh -c 'echo "7" > /etc/yum/vars/dockerosversion'
@@ -62,12 +67,10 @@ sudo cat > /etc/docker/daemon.json <<EOL
 }
 EOL
 
-#Restart Docker
+# Enable and Restart Docker
 sudo systemctl daemon-reload
 sudo systemctl restart docker
-
-#Post Install Steps
-sudo usermod -aG docker $USER
-
-#Enable Docker on Start
 sudo systemctl enable docker
+
+# Post Install Steps
+sudo usermod -aG docker $USER

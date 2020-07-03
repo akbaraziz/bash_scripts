@@ -8,7 +8,6 @@
 
 #--------------------------------------------------
 
-
 set -ex
 
 # Copy id_rsa.pub to multiple servers defined in a file

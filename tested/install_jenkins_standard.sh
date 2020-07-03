@@ -8,11 +8,14 @@
 
 #--------------------------------------------------
 
-
 set -ex
 
-# Remove OS Java
-sudo yum -y remove java
+# Remove Existing Version of Java if installed
+if rpm -qa | grep -q java*; then
+    yum remove -y java*;
+else
+    echo Not Installed
+fi
 
 # Install OpenJDK
 sudo yum -y install java-1.8.0-openjdk

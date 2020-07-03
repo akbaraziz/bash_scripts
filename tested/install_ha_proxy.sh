@@ -8,14 +8,15 @@
 
 #--------------------------------------------------
 
-
 set -ex
+
+port=80
 
 # Disable SELINUX
 sudo setenforce 0
 sudo sed -i 's/permissive/disabled/' /etc/sysconfig/selinux
 
-port=80
+# Install HAProxy
 sudo yum update -y
 sudo yum install -y haproxy
 

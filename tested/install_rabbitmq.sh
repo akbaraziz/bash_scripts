@@ -8,10 +8,9 @@
 
 #--------------------------------------------------
 
-
 set -ex
 
-MQ_VER=3.7.15-1.el7
+MQ_VER=v3.7.15-1.el7
 ER_VER=22.0.7-1.el7
 MQ_ADMIN=mqadmin
 MQ_ADMIN_PASSWORD=P@ssword1
@@ -20,7 +19,7 @@ MQ_ADMIN_PASSWORD=P@ssword1
 wget https://github.com/rabbitmq/signing-keys/releases/download/2.0/rabbitmq-release-signing-key.asc
 rpm --import rabbitmq-release-signing-key.asc
 
-# Adding ELAN Repository
+# Adding ERLANG Repository
 cat > /etc/yum.repos.d/rabbitmq-erlang.repo <<EOL
 [rabbitmq-erlang]
 name=rabbitmq-erlang
@@ -31,21 +30,21 @@ repo_gpgcheck=0
 enabled=1
 EOL
 
-# Installing ERLAN for RabbitMQ
+# Installing ERLANG for RabbitMQ
 yum install erlang-$ER_VER -y
 
 # Adding RabbitMQ Repository
 cat > /etc/yum.repos.d/rabbitmq.repo <<EOL
 [bintray-rabbitmq-server]
 name=bintray-rabbitmq-rpm
-baseurl=https://dl.bintray.com/rabbitmq/rpm/rabbitmq-server/v3.7.x/el/7/
+baseurl=https://dl.bintray.com/rabbitmq/rpm/rabbitmq-server/${MQ_VER}/el/7/
 gpgcheck=0
 repo_gpgcheck=0
 enabled=1
 EOL
 
 # Installing RabbitMQ
-sudo yum install rabbitmq-server-$MQ_VER -y
+sudo yum install rabbitmq-server-${MQ_VER} -y
 
 # Add Firewall Rules if Running
 if [ `systemctl is-active firewalld` ]

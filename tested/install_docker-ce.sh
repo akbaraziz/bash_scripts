@@ -8,18 +8,7 @@
 
 #--------------------------------------------------
 
-
 set -ex
-
-set -ex
-
-# Disable SELinux
-setenforce 0
-sed -i --follow-symlinks 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/sysconfig/selinux
-
-# Disable swap
-swapoff -a
-sed -i '/ swap/ s/^/#/' /etc/fstab
 
 # Remove Existing Version of Docker if installed
 # Check for existing version of Docker and remove if found
@@ -37,7 +26,7 @@ else
     echo "$FILE does not exist"
 fi
 
-#Install Docker CE
+# Install Docker CE Pre-Reqs
 sudo yum install -y yum-utils device-mapper-persistent-data lvm2
 
 # Create Docker Repository
@@ -46,7 +35,7 @@ yum-config-manager \
   https://download.docker.com/linux/centos/docker-ce.repo
 
 ## Install Docker CE.
-yum install -y docker-ce docker-ce-cli
+yum install docker-ce
 
 # Setup daemon
 sudo mkdir -p /etc/docker
@@ -64,12 +53,10 @@ sudo cat >/etc/docker/daemon.json <<EOL
 }
 EOL
 
-#Restart Docker
+# Enable and Restart Docker
 sudo systemctl daemon-reload
+sudo systemctl enable docker 
 sudo systemctl restart docker
 
-#Post Install Steps
+# Post Install Steps
 sudo usermod -aG docker $USER
-
-#Enable Docker on Start
-sudo systemctl enable docker

@@ -8,10 +8,17 @@
 
 #--------------------------------------------------
 
-
 set -ex
 
 TOMCAT_VER=9.0.35
+TOMCAT_ADMIN_PASSWORD=
+
+# Remove Existing Version of Java if installed
+if rpm -qa | grep -q java*; then
+    yum remove -y java*;
+else
+    echo Not Installed
+fi
 
 # Install Pre-Reqs
 sudo yum install java-1.8.0-openjdk
@@ -25,6 +32,7 @@ wget http://www.gtlib.gatech.edu/pub/apache/tomcat/tomcat-9/v${TOMCAT_VER}/bin/a
 tar -xf apache-tomcat-${TOMCAT_VER}.tar.gz
 
 # Move Source File
+sudo mkdir -p /opt/tomcat/latest/bin
 sudo mv apache-tomcat-${TOMCAT_VER} /opt/tomcat/
 sudo ln -s /opt/tomcat/apache-tomcat-${TOMCAT_VER} /opt/tomcat/latest
 
@@ -36,7 +44,7 @@ sudo cat >/opt/tomcat/latest/conf/tomcat-users.xml <<EOL
 -->
    <role rolename="admin-gui"/>
    <role rolename="manager-gui"/>
-   <user username="admin" password="P@ssword1" roles="admin-gui,manager-gui"/>
+   <user username="admin" password="${TOMCAT_ADMIN_PASSWORD}" roles="admin-gui,manager-gui"/>
 </tomcat-users>
 EOL
 
@@ -79,6 +87,5 @@ else
     firewall_status=inactive
 fi
 
-
 # Tomcat URL
-echo "Application URL - http://$HOSTNAME:8080"
+echo "Application URL is http://`hostname`:8080"

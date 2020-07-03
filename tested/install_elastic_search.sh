@@ -8,7 +8,6 @@
 
 #--------------------------------------------------
 
-
 set -ex
 
 # Create Elastic Search Repository
@@ -26,6 +25,7 @@ type=rpm-md
 EOL
 
 sudo yum install --enablerepo=elasticsearch elasticsearch
+
 # Install Elastic Search
 sudo yum -y install elasticsearch
 

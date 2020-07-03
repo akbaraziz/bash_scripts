@@ -7,8 +7,6 @@
 # Script purpose: To install Docker, Flannel, Kubernetes, Kubernetes Dashboard, Kubernetes Metric Server, and Helm Charts
 
 #--------------------------------------------------
-
-
 set -ex
 
 # System Variables
@@ -24,8 +22,8 @@ echo P@ssword1 | passwd --stdin "$kube_admin"
 
 # Content URL's
 FLANNEL_URL=https://raw.githubusercontent.com/coreos/flannel/master/Documentation
-EPEL_URL=https://dl.fedoraproject.org/pub/epel
 DOCKER_URL=https://download.docker.com/linux/centos/docker-ce.repo
+EPEL_URL=https://dl.fedoraproject.org/pub/epel
 
 # Change Host Name
 sudo hostnamectl set-hostname ${HOST_NAME}
@@ -91,16 +89,8 @@ else
     echo "Not Installed"
 fi
 
-# Remove Existing Docker Repo if exists
-FILE=/etc/yum.repos.d/docker*.repo
-if [ -f "$FILE" ]; then
-    rm /etc/yum.repos.d/docker*.repo;
-else
-    echo "$FILE does not exist"
-fi
-
 # Install Docker
-sudo yum install -y --quiet docker-ce docker-ce-cli containerd.io
+sudo yum install -y --quiet docker-ce
 
 # Setup daemon
 mkdir -p /etc/docker
@@ -134,16 +124,14 @@ kubectl completion bash > /etc/bash_completion.d/kubectl
 # activate the bash completion
 . /etc/profile
 
-# Confirm Docker and Kubelet are running
+# Confirm Docker is running
 sudo systemctl is-active --quiet docker && echo "docker is running" || echo "docker is NOT running"
-
 
 # Pull Docker Images
 kubeadm config images pull
 
 # Initialize Kubernetes Master
 kubeadm init --apiserver-advertise-address=$IPADDR --pod-network-cidr=${KUBE_NETWORK}
-
 
 # Cluster Configure
 mkdir -p /home/$kube_admin/.kube

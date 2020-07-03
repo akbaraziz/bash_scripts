@@ -8,7 +8,6 @@
 
 #--------------------------------------------------
 
-
 set -ex
 
 SW_VER=2.10
@@ -35,5 +34,5 @@ fi
 sudo yum install -y spacewalk-setup-postgresql
 sudo yum install -y spacewalk-postgresql
 
-# Configure Spacewalk
-sudo spacewalk-setup
+# Configure Spacewalk Message
+echo "To configure Spacewalk, please run `spacewalk-setup`"

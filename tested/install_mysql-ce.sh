@@ -8,7 +8,6 @@
 
 #--------------------------------------------------
 
-
 set -ex
 
 MYSQL_VER=
@@ -16,6 +15,12 @@ MYSQL_VER=
 # Create MySQL Community Edition Repository
 rpm -Uvh https://dev.mysql.com/get/mysql-community-server-${MYSQL_VER}.el7.x86_64.rpm
 
+# Remove Existing Version of Java if installed
+if rpm -qa | grep -q java*; then
+    yum remove -y java*;
+else
+    echo Not Installed
+fi
 
 # Install OpenJDK 8
 sudo yum install -y java-1.8.0-openjdk

@@ -7,7 +7,6 @@
 # Script tested on OS: CentOS and Redhat 7.x
 #--------------------------------------------------
 
-
 set -ex
 
 # Allow Port 22 through firewall

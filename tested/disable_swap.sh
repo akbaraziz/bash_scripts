@@ -1,4 +1,4 @@
-s#!/bin/bash
+#!/bin/bash
 # Script author: Akbar Aziz
 # Script site: https://github.com/akbaraziz/bash_scripts
 # Script date: 06/05/2020
@@ -7,7 +7,6 @@ s#!/bin/bash
 # Script purpose: Disable Swap Volume
 
 #--------------------------------------------------
-
 
 set -ex
 

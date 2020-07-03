@@ -8,7 +8,6 @@
 
 #--------------------------------------------------
 
-
 set -ex
 
 SPLUNK_VER=8.0.4-767223ac207f
@@ -42,4 +41,4 @@ else
 fi
 
 # URL for application
-echo "http://$HOSTNAME:8000"
+echo "Application is located at http://`hostname`:8000"

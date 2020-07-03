@@ -1,18 +1,29 @@
 #!/bin/bash
+# Script author: Akbar Aziz
+# Script site: https://github.com/akbaraziz/bash_scripts
+# Script create date: 07/02/2020
+# Script ver: 1.0
+# Script tested on OS: CentOS 7.x
+# Script purpose: Register with Spacewalk Server
+
+#--------------------------------------------------
 
 set -ex
 
 SW_HOSTNAME=
+KEY=
+
+# Add EPEL Repo
+sudo rpm -Uvh http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 
 # Install Pre-Reqs
-sudo rpm -Uvh http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 sudo yum -y install rhn-client-tools rhn-check rhn-setup rhnsd m2crypto yum-rhn-plugin
 
 # Install Spacewalk Server Certificate:
 sudo rpm -Uvh http://${SW_HOSTNAME}/pub/rhn-org-trusted-ssl-cert-1.0-1.noarch.rpm
 
 # Register Client with Spacewalk Server
-sudo rhnreg_ks --serverUrl=https://${SW_HOSTNAME}/XMLRPC --sslCACert=/usr/share/rhn/RHN-ORG-TRUSTED-SSL-CERT --activationkey=1-e7fed2c2d84e1329ba58462706ad39a5
+sudo rhnreg_ks --serverUrl=https://${SW_HOSTNAME}/XMLRPC --sslCACert=/usr/share/rhn/RHN-ORG-TRUSTED-SSL-CERT --activationkey=${KEY}
 sudo systemctl enable rhnsd && systemctl start rhnsd
 
 # Disable Other External CentOS Repos

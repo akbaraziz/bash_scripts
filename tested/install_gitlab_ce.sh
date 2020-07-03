@@ -8,7 +8,6 @@
 
 #--------------------------------------------------
 
-
 set -ex
 
 GIT_LAB_REPO=https://packages.gitlab.com/install/repositories/gitlab/gitlab-ee

@@ -94,16 +94,8 @@ else
     echo "Not Installed"
 fi
 
-# Remove Existing Docker Repo if exists
-FILE=/etc/yum.repos.d/docker*.repo
-if [ -f "$FILE" ]; then
-    rm /etc/yum.repos.d/docker*.repo;
-else
-    echo "$FILE does not exist"
-fi
-
 # Install Docker
-sudo yum install -y --quiet docker-ee docker-ee-cli containerd.io
+sudo yum install -y --quiet docker-ee
 
 # Setup daemon
 mkdir -p /etc/docker
@@ -137,7 +129,7 @@ kubectl completion bash > /etc/bash_completion.d/kubectl
 # activate the bash completion
 . /etc/profile
 
-# Confirm Docker and Kubelet are running
+# Confirm Docker is running
 sudo systemctl is-active --quiet docker && echo "docker is running" || echo "docker is NOT running"
 
 # Pull Docker Images
