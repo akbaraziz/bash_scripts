@@ -47,7 +47,7 @@ fi
 export DOCKERURL="{DOCKER_URL}"
 sudo -E sh -c 'echo "$DOCKERURL/rhel" > /etc/yum/vars/dockerurl'
 sudo sh -c 'echo "7" > /etc/yum/vars/dockerosversion'
-sudo yum install -y yum-utils device-mapper-persistent-date lvm2
+sudo yum install -y yum-utils device-mapper-persistent-data lvm2
 sudo yum-config-manager --enable rhel-7-server-extras-rpms
 sudo -E yum-config-manager --add-repo "$DOCKERURL/rhel/docker-ee.repo"
 sudo yum install -y docker-ee docker-ee-cli containerd.io
