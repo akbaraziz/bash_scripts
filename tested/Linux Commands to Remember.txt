@@ -1,0 +1,70 @@
+UNIX Commands
+
+Get IP Address:
+ifconfig | grep inet | awk '{ print $2 }' | head -n 1
+
+List all firewll allowed ports:
+firewall-cmd --list-all
+
+If then option
+{
+if [ ! -f /scripts/alert ]; then
+    echo "File not found!"
+    exit 0
+fi
+}
+
+FILE=/etc/resolv.conf
+if test -f "$FILE"; then
+    echo "$FILE exist"
+fi
+
+FILE=/etc/docker
+if [ -d "$FILE" ]; then
+    echo "$FILE is a directory"
+fi
+
+FILE=/etc/docker
+if [ ! -f "$FILE" ]; then
+    echo "$FILE does not exist"
+fi
+
+FILE=/etc/docker
+if [ -f /etc/resolv.conf -a -f /etc/hosts ]; then
+    echo "$FILE is a directory"
+fi
+
+If Directory Exists:
+#!/bin/bash
+# dirtest.bash - Demo script by nixCraft under GPL v2.x+
+# -------------------------------------------------------
+dir="$1"
+ 
+[ $# -eq 0 ] && { echo "Usage: $0 dir-name"; exit 1; }
+ 
+if [ -d "$dir" -a ! -h "$dir" ]
+then
+   echo "$dir found and setting up new Apache/Lighttpd/Nginx jail, please wait..."
+   # __WWWJailSetup "cyberciti.biz" "setup"
+else
+   echo "Error: $dir not found or is symlink to $(readlink -f ${dir})."
+fi
+
+Git Clone Repo if it Exists
+#!/bin/sh
+
+REPOSRC=$1
+LOCALREPO=$2
+
+# We do it this way so that we can abstract if from just git later on
+LOCALREPO_VC_DIR=$LOCALREPO/.git
+
+if [ ! -d $LOCALREPO_VC_DIR ]
+then
+    git clone $REPOSRC $LOCALREPO
+else
+    cd $LOCALREPO
+    git pull $REPOSRC
+fi
+
+# End
