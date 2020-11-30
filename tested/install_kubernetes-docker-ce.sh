@@ -149,7 +149,7 @@ sleep 10
 sudo -u $kube_admin kubectl get pods --all-namespaces
 
 # Install Kubernetes Metric Server
-sudo -u $kube_admin kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.3.6/components.yaml
+sudo -u $kube_admin kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
 
 # Verify Metric Server Deployment
 sudo -u $kube_admin kubectl get deployment metrics-server -n kube-system
@@ -188,7 +188,7 @@ chmod 700 get_helm.sh
 helm repo add stable https://kubernetes-charts.storage.googleapis.com
 
 # Install Kubernetes Dashboard
-sudo -u $kube_admin kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.1/aio/deploy/recommended.yaml
+sudo -u $kube_admin kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.4/aio/deploy/recommended.yaml
 #helm install kubernetes-dashboard stable/kubernetes-dashboard --set rbac.clusterAdminRole=true
 
 # Get Helm Services
