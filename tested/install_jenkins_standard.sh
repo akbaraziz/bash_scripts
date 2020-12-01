@@ -1,31 +1,22 @@
 #!/bin/bash
 # Script author: Akbar Aziz
 # Script site: https://github.com/akbaraziz/bash_scripts
-# Script date: 06/05/2020
-# Script ver: 1.0
+# Script date: 11/30/2020
+# Script ver: 1.1
 # Script tested on OS: CentOS 7.x
 # Script purpose: Install Jenkins
 
 #--------------------------------------------------
 
+#!/bin/bash
 set -ex
 
-# Remove Existing Version of Java if installed
-if rpm -qa | grep -q java*; then
-    yum remove -y java*;
-else
-    echo Not Installed
-fi
+sudo yum install -y wget
 
-# Install OpenJDK
-sudo yum -y install java-1.8.0-openjdk
-
-# Create Jenkins LTS Repository
-sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
-sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
-
-# Install Jenkins
-sudo yum -y install jenkins
+#Import jenkins-ci rpm and install jenkins
+sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat/jenkins.repo
+sudo rpm --import https://pkg.jenkins.io/redhat/jenkins.io.key
+sudo yum install -y jenkins
 
 # Enable and Start Jenkins Services 
 sudo chkconfig jenkins on
