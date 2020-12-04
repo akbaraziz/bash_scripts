@@ -21,3 +21,7 @@ sudo mv  bintray-jfrog-artifactory-oss-rpms.repo /etc/yum.repos.d/;
 
 # Install Artifactory CE
 yum install jfrog-artifactory-oss -y
+
+# Start and Enable Artifactory
+sudo systemctl start artifactory
+sudo systemctl enable artifactory
