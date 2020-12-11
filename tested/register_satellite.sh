@@ -1,7 +1,7 @@
 #!/bin/bash
 # Script author: Akbar Aziz
 # Script site: https://github.com/akbaraziz/bash_scripts
-# Script create date: 00/00/2020
+# Script create date: 07/22/2020
 # Script ver: 1.0
 # Script tested on OS: Redhat 7.x and 8.x
 # Script purpose: Register System with Redhat Satellite Server
