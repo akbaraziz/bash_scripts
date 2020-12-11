@@ -2,7 +2,7 @@
 
 set -ex
 
-GITLAB_DNS_NAME="https://@@{HOST_NAME}@@"
+GITLAB_DNS_NAME="@@{HOST_NAME}@@"
 
 # Install Dependencies
 sudo dnf install -y curl policycoreutils openssh-server postfix checkpolicy policycoreutils-python-utils python3-audit python3-libsemanage python3-policycoreutils python3-setools

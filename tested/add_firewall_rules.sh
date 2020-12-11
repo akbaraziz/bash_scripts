@@ -16,5 +16,8 @@ sudo firewall-cmd --permanent --zone=public --add-port=22/tcp
 sudo firewall-cmd --permanent --zone=public --add-port=80/tcp
 sudo firewall-cmd --permanent --zone=public --add-port=443/tcp
 
+# Another Option
+sudo firewall-cmd --permanent --add-service={ssh,http,https} --permanent
+
 # Reload firewall config with new port rules
 sudo firewall-cmd --reload
