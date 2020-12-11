@@ -11,7 +11,7 @@ sudo systemctl enable --now sshd
 # Set Firewall Rules
 sudo firewall-cmd --permanent --zone=public --add-service=http
 sudo firewall-cmd --permanent --zone=public --add-service=https
-sudo firewall-cmd --permanent --zone=public --add-port=22/tcp
+sudo firewall-cmd --permanent --zone=public --add-service=ssh
 sudo firewall-cmd --reload
 
 # Create GitLab Repo
