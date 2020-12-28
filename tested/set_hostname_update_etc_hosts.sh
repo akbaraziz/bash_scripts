@@ -1,7 +1,7 @@
 # Set Host Name
 
-HOST_NAME=
-IPADDR=
+HOST_NAME=@@{HOST_NAME}@@
+IPADDR=@@{address}
 sudo hostnamectl set-hostname ${HOST_NAME}
 
 sudo echo ${HOST_NAME} | tee /etc/hostname
