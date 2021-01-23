@@ -1,4 +1,4 @@
-s#!/bin/bash
+#!/bin/bash
 # Script author: Akbar Aziz
 # Script site: https://github.com/akbaraziz/bash_scripts
 # Script date: 06/05/2020
@@ -10,22 +10,11 @@ s#!/bin/bash
 
 set -ex
 
-DOCKER_URL=
+export dockerurl=https://storebits.docker.com/ee/m/subscription-id/centos
 
 # Disable swap
-# does the swap file exist?
-grep -q "swapfile" /etc/fstab
-
-# if it does then remove it
-if [ $? -eq 0 ]; then
-	echo 'swapfile found. Removing swapfile.'
-	sed -i '/swapfile/d' /etc/fstab
-	echo "3" > /proc/sys/vm/drop_caches
-	swapoff -a
-	rm -f /swapfile
-else
-	echo 'No swapfile found. No changes made.'
-fi
+sudo swapoff -a
+sed -i '/ swap/ s/^/#/' /etc/fstab
 
 # Remove Existing Version of Docker if installed
 # Check for existing version of Docker and remove if found
@@ -44,15 +33,17 @@ else
 fi
 
 # Install Docker EE
-export DOCKERURL="{DOCKER_URL}"
-sudo -E sh -c 'echo "$DOCKERURL/rhel" > /etc/yum/vars/dockerurl'
+sudo rpm --import $dockerurl/gpg
+sudo -E sh -c 'echo "$dockerurl" > /etc/yum/vars/dockerurl'
 sudo sh -c 'echo "7" > /etc/yum/vars/dockerosversion'
 sudo yum install -y yum-utils device-mapper-persistent-date lvm2
 sudo yum-config-manager --enable rhel-7-server-extras-rpms
-sudo -E yum-config-manager --add-repo "$DOCKERURL/rhel/docker-ee.repo"
+sudo yum makecache fast
+sudo -E yum-config-manager --add-repo "$dockerurl/docker-ee.repo"
 sudo yum install -y docker-ee docker-ee-cli containerd.io
 
 # Setup daemon
+mkdir -p /etc/docker
 sudo cat > /etc/docker/daemon.json <<EOL
 {
   "exec-opts": ["native.cgroupdriver=systemd"],
