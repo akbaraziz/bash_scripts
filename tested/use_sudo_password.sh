@@ -1,0 +1,1 @@
+echo "@@{USER}@@" | sudo -S 'command' 2> /dev/null
