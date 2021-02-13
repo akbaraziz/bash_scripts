@@ -14,7 +14,7 @@ HOST_NAME=`hostname -f`
 IPADDR=`ip route get 1 | awk '{print $NF;exit}'`
 KUBE_NETWORK=10.244.0.0/16
 
-kube_admin=k8admin # Account that will have permissions to run Kubernetes and also Kubernetes-Dashboard 
+kube_admin=k8admin # Account that will have permissions to run Kubernetes and also Kubernetes-Dashboard
 
 # Create new Kubernetes user with sudo rights
 sudo useradd -G wheel $kube_admin
@@ -22,7 +22,8 @@ echo P@ssword1 | passwd --stdin "$kube_admin"
 
 # Content URL's
 FLANNEL_URL=https://raw.githubusercontent.com/coreos/flannel/master/Documentation
-DOCKER_URL=https://download.docker.com/linux/centos/docker-ce.repo
+#DOCKER_URL=https://download.docker.com/linux/centos/docker-ce.repo
+#DOCKER_URL=https://download.docker.com/linux/centos/docker-ce.repo #Red Hat Repo
 EPEL_URL=https://dl.fedoraproject.org/pub/epel
 
 # Change Host Name
@@ -36,35 +37,25 @@ sudo echo -e ""${IPADDR}" \t "${HOST_NAME}"" >> /etc/hosts
 # Create EPEL Repository
 sudo yum install -y ${EPEL_URL}/epel-release-latest-7.noarch.rpm
 
-# Create Docker Repo
-sudo yum-config-manager --add-repo $DOCKER_URL
-
-# Create Kubernetes Repo
-cat <<EOF > /etc/yum.repos.d/kubernetes.repo
-[kubernetes]
-name=Kubernetes
-baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
-enabled=1
-gpgcheck=1
-repo_gpgcheck=1
-gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg
-       https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
-EOF
+# Additional Repos for Red Hat 7
+sudo subscription-manager repos --enable=rhel-7-server-rpms \
+--enable=rhel-7-server-extras-rpms \
+--enable=rhel-7-server-optional-rpms
 
 # Disable SELinux
-setenforce 0
-sed -i --follow-symlinks 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/sysconfig/selinux
+sudo setenforce 0
+sudo sed -i --follow-symlinks 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/sysconfig/selinux
 
 # Disable swap
-swapoff -a
-sed -i '/ swap/ s/^/#/' /etc/fstab
+sudo swapoff -a
+sudo sed -i '/ swap/ s/^/#/' /etc/fstab
 
 # Disable Firewall
 sudo systemctl disable firewalld
 sudo systemctl stop firewalld
 
 # Enable IPTables
-sudo yum install -y --quiet iptables-services.x86_64
+sudo yum install -y iptables-services.x86_64
 sudo systemctl start iptables
 sudo systemctl enable iptables
 sudo systemctl unmask iptables
@@ -79,7 +70,7 @@ EOF
 sudo sysctl --system
 
 # Install Docker Pre-Reqs
-sudo yum install -y --quiet yum-utils device-mapper-persistent-data lvm2 container-selinux iscsi-initiator-utils socat
+sudo yum install -y yum-utils device-mapper-persistent-data lvm2 container-selinux iscsi-initiator-utils socat
 
 # Remove Existing Version of Docker if installed
 # Check for existing version of Docker and remove if found
@@ -89,8 +80,18 @@ else
     echo "Not Installed"
 fi
 
+# Create Docker Repo
+cat <<EOF > /etc/yum.repos.d/docker-ce.repo
+[docker-ce-stable]
+name=Docker CE Stable - $basesearch
+baseurl=https://download.docker.com/linux/centos/7/x86_64/stable
+enabled=1
+gpgcheck=1
+gpgkey=https://download.docker.com/linux/centos/gpg
+EOF
+
 # Install Docker
-sudo yum install -y --quiet docker-ce
+sudo yum install -y docker-ce docker-ce-cli containerd.io
 
 # Setup daemon
 mkdir -p /etc/docker
@@ -108,8 +109,20 @@ cat >/etc/docker/daemon.json <<EOL
 }
 EOL
 
+# Create Kubernetes Repo
+cat <<EOF > /etc/yum.repos.d/kubernetes.repo
+[kubernetes]
+name=Kubernetes
+baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+enabled=1
+gpgcheck=1
+repo_gpgcheck=1
+gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg
+       https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+EOF
+
 # Install Kubernetes
-sudo yum install -y --quiet kubelet kubeadm kubectl –disableexcludes=kubernetes
+sudo yum install -y kubelet kubeadm kubectl –-disableexcludes=kubernetes
 
 # Enable and Start Services
 sudo systemctl enable docker
@@ -125,7 +138,7 @@ kubectl completion bash > /etc/bash_completion.d/kubectl
 . /etc/profile
 
 # Confirm Docker is running
-sudo systemctl is-active --quiet docker && echo "docker is running" || echo "docker is NOT running"
+sudo systemctl is-active docker && echo "docker is running" || echo "docker is NOT running"
 
 # Pull Docker Images
 kubeadm config images pull
@@ -149,10 +162,7 @@ sleep 10
 sudo -u $kube_admin kubectl get pods --all-namespaces
 
 # Install Kubernetes Metric Server
-sudo -u $kube_admin kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
-
-# Verify Metric Server Deployment
-sudo -u $kube_admin kubectl get deployment metrics-server -n kube-system
+# sudo -u $kube_admin kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
 
 # Create kubeadmin-service account
 sudo -u $kube_admin cat > /var/tmp/kubeadmin-service-account.yaml <<"EOF"
@@ -162,7 +172,7 @@ metadata:
   name: kubeadmin
   namespace: kube-system
 ---
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: kubeadmin
@@ -185,11 +195,18 @@ chmod 700 get_helm.sh
 ./get_helm.sh
 
 # Add Helm Repo for Kubernetes Dashboard
-helm repo add stable https://kubernetes-charts.storage.googleapis.com
+helm repo add stable https://charts.helm.sh/stable
 
 # Install Kubernetes Dashboard
-sudo -u $kube_admin kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.4/aio/deploy/recommended.yaml
+sudo -u $kube_admin $ kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.1.0/aio/deploy/recommended.yaml
+
 #helm install kubernetes-dashboard stable/kubernetes-dashboard --set rbac.clusterAdminRole=true
+
+# Install Kubernetes Metrics Server
+sudo -u $kube_admin $ kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+
+# Verify Metric Server Deployment
+sudo -u $kube_admin kubectl get deployment metrics-server -n kube-system
 
 # Get Helm Services
 sudo -u $kube_admin kubectl get services
