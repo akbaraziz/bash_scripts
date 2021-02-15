@@ -220,4 +220,4 @@ sudo -u $kube_admin kubectl -n kube-system describe secret $(kubectl -n kube-sys
 # Start Proxy for Kubernetes Dashboard
 sudo -u $kube_admin kubectl proxy &
 
-echo "End of Installation"
+echo "End of Installation."
