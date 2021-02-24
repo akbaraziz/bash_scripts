@@ -17,7 +17,8 @@ KUBE_NETWORK=10.244.0.0/16
 kube_admin=k8admin # Account that will have permissions to run Kubernetes and also Kubernetes-Dashboard
 
 # Create new Kubernetes user with sudo rights
-sudo useradd -G wheel $kube_admin
+id -u $kube_admin &>/dev/null || useradd $kube_admin
+sudo usermod -a -G wheel $kube_admin
 echo P@ssword1 | passwd --stdin "$kube_admin"
 
 # Content URL's

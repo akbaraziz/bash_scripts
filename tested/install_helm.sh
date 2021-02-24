@@ -10,7 +10,7 @@
 
 set -ex
 
-HELM_VER=v2.16.7
+HELM_VER=v2.17.0
 HELM_URL=https://storage.googleapis.com/kubernetes-helm/helm-${HELM_VER}-linux-amd64.tar.gz
 
 wget ${HELM_URL}/helm-${HELM_VER}-linux-amd64.tar.gz
