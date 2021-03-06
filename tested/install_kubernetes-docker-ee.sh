@@ -15,7 +15,7 @@ HOST_NAME=`hostname -f`
 IPADDR=`ip route get 1 | awk '{print $NF;exit}'`
 KUBE_NETWORK=10.244.0.0/16
 
-kube_admin=k8admin # Account that will have permissions to run Kubernetes and also Kubernetes-Dashboard 
+kube_admin=k8admin # Account that will have permissions to run Kubernetes and also Kubernetes-Dashboard
 
 # Create new Kubernetes user with sudo rights
 sudo useradd -G wheel $kube_admin
@@ -113,7 +113,7 @@ cat >/etc/docker/daemon.json <<EOL
 EOL
 
 # Install Kubernetes
-sudo yum install -y --quiet kubelet kubeadm kubectl –disableexcludes=kubernetes
+sudo yum install -y --quiet kubelet kubeadm kubectl --disableexcludes=kubernetes
 
 # Enable and Start Services
 sudo systemctl enable docker

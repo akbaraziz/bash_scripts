@@ -1,10 +1,12 @@
 #!/bin/bash
 # Script author: Akbar Aziz
 # Script site: https://github.com/akbaraziz/bash_scripts
-# Script date: 06/19/2020
-# Script ver: 1.1
-# Script tested on OS: CentOS 7.x
-# Script purpose: To install Docker, Flannel, Kubernetes, Kubernetes Dashboard, Kubernetes Metric Server, and Helm Charts
+# Script date: 03/06/2021
+# Script ver: 1.2
+# Script tested on OS: Red Hat 7.x
+# Script purpose: To install Docker, Flannel, Kubernetes, Kubernetes Dashboard, Kubernetes Metric Server, Helm Charts, and NGINX Pod
+# Comment: This is to install on Master Node. It does not take into account multiple master nodes
+# which would require SSL certs to communicate. The worker nodes must be added to make it a cluster.
 
 #--------------------------------------------------
 set -ex
@@ -13,18 +15,18 @@ set -ex
 HOST_NAME=`hostname -f`
 IPADDR=`ip route get 1 | awk '{print $NF;exit}'`
 KUBE_NETWORK=10.244.0.0/16
-
-kube_admin=k8admin # Account that will have permissions to run Kubernetes and also Kubernetes-Dashboard
+DOCKER_VERSION=19.03
+KUBE_ADMIN=k8admin # Account that will have permissions to run Kubernetes and also Dashboard
 
 # Create new Kubernetes user with sudo rights
-id -u $kube_admin &>/dev/null || useradd $kube_admin
-sudo usermod -a -G wheel $kube_admin
-echo P@ssword1 | passwd --stdin "$kube_admin"
+id -u $KUBE_ADMIN &>/dev/null || useradd $KUBE_ADMIN -d /home/$KUBE_ADMIN
+sudo usermod -a -G wheel $KUBE_ADMIN
+echo P@ssword1 | passwd --stdin "$KUBE_ADMIN"
 
 # Content URL's
-FLANNEL_URL=https://raw.githubusercontent.com/coreos/flannel/master/Documentation
+FLANNEL_URL=/
 #DOCKER_URL=https://download.docker.com/linux/centos/docker-ce.repo
-#DOCKER_URL=https://download.docker.com/linux/centos/docker-ce.repo #Red Hat Repo
+DOCKER_URL=https://download.docker.com/linux/rhel/docker-ce.repo #Red Hat Repo
 EPEL_URL=https://dl.fedoraproject.org/pub/epel
 
 # Change Host Name
@@ -84,15 +86,15 @@ fi
 # Create Docker Repo
 cat <<EOF > /etc/yum.repos.d/docker-ce.repo
 [docker-ce-stable]
-name=Docker CE Stable - $basesearch
-baseurl=https://download.docker.com/linux/centos/7/x86_64/stable
+name=Docker CE Stable - $basearch
+baseurl=https://download.docker.com/linux/rhel/7/$basearch/stable
 enabled=1
 gpgcheck=1
-gpgkey=https://download.docker.com/linux/centos/gpg
+gpgkey=https://download.docker.com/linux/rhel/gpg
 EOF
 
 # Install Docker
-sudo yum install -y docker-ce docker-ce-cli containerd.io
+sudo yum install -y docker-ce-$DOCKER_VERSION docker-ce-cli-$DOCKER_VERSION
 
 # Setup daemon
 mkdir -p /etc/docker
@@ -107,6 +109,9 @@ cat >/etc/docker/daemon.json <<EOL
   "storage-opts": [
     "overlay2.override_kernel_check=true"
   ]
+  {
+	"dns": ["10.10.10.10", "8.8.4.4"]
+  }
 }
 EOL
 
@@ -126,20 +131,16 @@ EOF
 sudo yum install -y kubelet kubeadm kubectl –-disableexcludes=kubernetes
 
 # Enable and Start Services
-sudo systemctl enable docker
-sudo systemctl enable kubelet
-sudo systemctl start docker
-sudo systemctl start kubelet
+sudo systemctl enable --now docker
+sudo systemctl enable --now kubelet
 
 # Enable bash completion for both
 kubeadm completion bash > /etc/bash_completion.d/kubeadm
 kubectl completion bash > /etc/bash_completion.d/kubectl
 
-# activate the bash completion
-. /etc/profile
-
-# Confirm Docker is running
+# Confirm Docker and Kubelet are running
 sudo systemctl is-active docker && echo "docker is running" || echo "docker is NOT running"
+sudo systemctl is-active kubelet && echo "kubelet is running" || echo "kubelet is NOT running"
 
 # Pull Docker Images
 kubeadm config images pull
@@ -148,25 +149,22 @@ kubeadm config images pull
 kubeadm init --apiserver-advertise-address=$IPADDR --pod-network-cidr=${KUBE_NETWORK}
 
 # Cluster Configure
-mkdir -p /home/$kube_admin/.kube
-cp -i /etc/kubernetes/admin.conf /home/$kube_admin/.kube/config
-chown $kube_admin:$kube_admin /home/$kube_admin/.kube/config
+mkdir -p /home/$KUBE_ADMIN/.kube
+cp -i /etc/kubernetes/admin.conf /home/$KUBE_ADMIN/.kube/config
+chown $KUBE_ADMIN:$KUBE_ADMIN /home/$KUBE_ADMIN/.kube/config
 
 # Get Flannel Config file
-sudo -u $kube_admin kubectl apply -f ${FLANNEL_URL}/kube-flannel.yml
+sudo -u $KUBE_ADMIN kubectl apply -f ${FLANNEL_URL}/kube-flannel.yml
 
 # Check status of Master Node
-sudo -u $kube_admin kubectl get nodes
+sudo -u $KUBE_ADMIN kubectl get nodes
 sleep 10
 
 # Check status of Pods
-sudo -u $kube_admin kubectl get pods --all-namespaces
-
-# Install Kubernetes Metric Server
-# sudo -u $kube_admin kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+sudo -u $KUBE_ADMIN kubectl get pods --all-namespaces
 
 # Create kubeadmin-service account
-sudo -u $kube_admin cat > /var/tmp/kubeadmin-service-account.yaml <<"EOF"
+sudo -u $KUBE_ADMIN cat > /var/tmp/kubeadmin-service-account.yaml <<"EOF"
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -188,7 +186,7 @@ subjects:
 EOF
 
 # Apply the Service Account
-sudo -u $kube_admin kubectl apply -f /var/tmp/kubeadmin-service-account.yaml
+sudo -u $KUBE_ADMIN kubectl apply -f /var/tmp/kubeadmin-service-account.yaml
 
 # Download and Install Helm Charts
 curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
@@ -199,26 +197,34 @@ chmod 700 get_helm.sh
 helm repo add stable https://charts.helm.sh/stable
 
 # Install Kubernetes Dashboard
-sudo -u $kube_admin $ kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.1.0/aio/deploy/recommended.yaml
-
-#helm install kubernetes-dashboard stable/kubernetes-dashboard --set rbac.clusterAdminRole=true
+sudo -u $KUBE_ADMIN $ kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.2.0/aio/deploy/recommended.yaml
 
 # Install Kubernetes Metrics Server
-sudo -u $kube_admin $ kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+sudo -u $KUBE_ADMIN $ kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
 
 # Verify Metric Server Deployment
-sudo -u $kube_admin kubectl get deployment metrics-server -n kube-system
+sudo -u $KUBE_ADMIN kubectl get deployment metrics-server -n kube-system
 
 # Get Helm Services
-sudo -u $kube_admin kubectl get services
+sudo -u $KUBE_ADMIN kubectl get services
 
 # Get Cluster Info
-sudo -u $kube_admin kubectl cluster-info
+sudo -u $KUBE_ADMIN kubectl cluster-info
+
+# Get Node Info
+sudo -u $KUBE_ADMIN kubectl get nodes
+
+# Get Pods Info
+sudo -u $KUBE_ADMIN kubectl get pods --all-namespaces
 
 # Get Dashboard Token
-sudo -u $kube_admin kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep kubeadmin | awk '{print $1}')
+sudo -u $KUBE_ADMIN kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep kubeadmin | awk '{print $1}')
 
 # Start Proxy for Kubernetes Dashboard
-sudo -u $kube_admin kubectl proxy &
+sudo -u $KUBE_ADMIN kubectl proxy &
+
+# Create NGINX Pod
+sudo -u $KUBE_ADMIN kubectl create deployment nginx --image=nginx
+sudo -u $KUBE_ADMIN kubectl create service nodeport nginx --tcp=80:80
 
 echo "End of Installation."
