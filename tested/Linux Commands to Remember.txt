@@ -68,3 +68,8 @@ else
 fi
 
 # End
+
+
+
+# Generate SSH Keygen without passphrase
+ssh-keygen -t rsa -b 4096 -f id_rsa -C test1 -N "" -q
