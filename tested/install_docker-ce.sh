@@ -31,8 +31,8 @@ sudo yum install -y yum-utils device-mapper-persistent-data lvm2
 
 # Create Docker Repository
 yum-config-manager \
-  --add-repo \
-  https://download.docker.com/linux/centos/docker-ce.repo
+--add-repo \
+https://download.docker.com/linux/centos/docker-ce.repo
 
 ## Install Docker CE.
 yum install docker-ce
@@ -55,7 +55,7 @@ EOL
 
 # Enable and Restart Docker
 sudo systemctl daemon-reload
-sudo systemctl enable docker 
+sudo systemctl enable docker
 sudo systemctl restart docker
 
 # Post Install Steps
