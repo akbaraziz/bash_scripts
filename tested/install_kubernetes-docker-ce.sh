@@ -12,8 +12,8 @@
 set -ex
 
 # System Variables
-HOST_NAME=`hostname -f`
-IPADDR=`ip route get 1 | awk '{print $NF;exit}'`
+HOST_NAME=$(hostname -f)
+IPADDR=$(ip route get 1 | awk '{print $NF;exit}')
 KUBE_NETWORK=10.244.0.0/16
 DOCKER_VERSION=19.03
 KUBE_ADMIN=k8admin # Account that will have permissions to run Kubernetes and also Dashboard
@@ -109,9 +109,6 @@ cat >/etc/docker/daemon.json <<EOL
   "storage-opts": [
     "overlay2.override_kernel_check=true"
   ]
-  {
-	"dns": ["10.10.10.10", "8.8.4.4"]
-  }
 }
 EOL
 
