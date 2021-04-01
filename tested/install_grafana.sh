@@ -1,8 +1,8 @@
 #!/bin/bash
 # Script author: Akbar Aziz
 # Script site: https://github.com/akbaraziz/bash_scripts
-# Script date: 06/05/2020
-# Script ver: 1.0
+# Script date: 03/31/2021
+# Script ver: 1.1
 # Script tested on OS: CentOS 7.x
 # Script purpose: To Install Grafana on CentOS 7 system
 
@@ -29,13 +29,13 @@ sslcacert=/etc/pki/tls/certs/ca-bundle.crt
 EOL
 
 # Update System
-sudo yum update -y
+sudo yum update -y --quiet
 
 # Install Grafana
-sudo yum install -y grafana
+sudo yum install -y --quiet grafana
 
 # Install Additional Font Packages
-sudo yum install -y fontconfig freetype* urw-fonts
+sudo yum install -y --quiet fontconfig freetype* urw-fonts
 
 # Add Firewall Rules if Running
 if [ `systemctl is-active firewalld` ]
@@ -48,8 +48,7 @@ fi
 
 # Enable and Start Grafana
 sudo systemctl daemon-reload
-sudo systemctl start grafana-server
-sudo systemctl enable grafana-server
+sudo systemctl enable --now grafana-server
 
 # Application Info
 echo "Application URL: http://$hostname:3000"
