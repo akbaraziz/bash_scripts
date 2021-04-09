@@ -2,14 +2,12 @@
 # Script author: Akbar Aziz - modified from original script by Danie Pham
 # Script site: https://www.writebash.com
 # Script date: 11/30/2020
-# Script ver: 1.0
+# Script ver: 1.0.0
 # Script use to install Apache on CentOS 7.x
+# Script tested on CentOS 7.x
 #--------------------------------------------------
-# Software version:
-# 1. OS: CentOS 7.9.2004 (Core) 64bit.
-# 2. Apache: Apache 2.4.46 (CentOS)
-#
-#--------------------------------------------------
+
+set -ex
 
 # Function check user root
 f_check_root () {
@@ -32,14 +30,14 @@ f_install_apache () {
     ########## INSTALL APACHE ##########
     echo "Installing apache ..."
     sleep 1
-
+    
     yum install httpd -y
-
+    
     # This part is optimize for server 2GB RAM
     cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf.original
     sed -i '/<IfModule prefork.c/,/<\/IfModule/{//!d}' /etc/httpd/conf/httpd.conf
     sed -i '/<IfModule prefork.c/a\ StartServers              4\n MinSpareServers           20\n MaxSpareServers           40\n MaxClients         200\n MaxRequestsPerChild    4500' /etc/httpd/conf/httpd.conf
-
+    
     # Enable and start httpd service
     systemctl enable httpd.service
     systemctl restart httpd.service
