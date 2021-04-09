@@ -1,11 +1,10 @@
 #!/bin/bash
 # Script author: Akbar Aziz
-# Script site: https://github.com/akbaraziz/bash_scripts
+# Script site: https://github.com/akbaraziz/bash_scripts/tested/set-static-ip.sh
 # Script create date: 07/02/2020
-# Script ver: 1.0
+# Script ver: 1.0.0
+# Script purpose: Set Static IP Address on Server
 # Script tested on OS: CentOS 7.x
-# Script purpose: Set Static IP Address on system
-
 #--------------------------------------------------
 
 set -ex

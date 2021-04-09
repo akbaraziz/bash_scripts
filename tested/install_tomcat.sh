@@ -1,11 +1,10 @@
 #!/bin/bash
 # Script author: Akbar Aziz
-# Script site: https://github.com/akbaraziz/bash_scripts
+# Script site: https://github.com/akbaraziz/bash_scripts/tested/install_tomcat.sh
 # Script date: 06/05/2020
-# Script ver: 1.0
-# Script tested on OS: CentOS 7.x
+# Script ver: 1.0.0
 # Script purpose: Install Tomcat
-
+# Script tested on OS: CentOS 7.x
 #--------------------------------------------------
 
 set -ex
@@ -21,7 +20,7 @@ else
 fi
 
 # Install Pre-Reqs
-sudo yum install java-1.8.0-openjdk
+sudo yum install java-1.8.0-openjdk --quiet
 
 # Create Tomcat User
 sudo useradd -m -U -d /opt/tomcat -s /bin/false tomcat
@@ -75,8 +74,7 @@ EOL
 sudo systemctl daemon-reload
 
 # Enable and Start Tomcat Service
-sudo systemctl enable tomcat
-sudo systemctl start tomcat
+sudo systemctl enable --now tomcat
 
 # Add Firewall Rules if Running
 if [ `systemctl is-active firewalld` ]

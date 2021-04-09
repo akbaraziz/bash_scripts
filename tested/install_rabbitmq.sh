@@ -1,11 +1,10 @@
 #!/bin/bash
 # Script author: Akbar Aziz
-# Script site: https://github.com/akbaraziz/bash_scripts
+# Script site: https://github.com/akbaraziz/bash_scripts/tested/install_rabbitmq.sh
 # Script date: 06/05/2020
-# Script ver: 1.0
-# Script tested on OS: CentOS 7.x
+# Script ver: 1.0.0
 # Script purpose: Install RabbitMQ
-
+# Script tested on OS: CentOS 7.x
 #--------------------------------------------------
 
 set -ex
@@ -31,7 +30,7 @@ enabled=1
 EOL
 
 # Installing ERLANG for RabbitMQ
-yum install erlang-$ER_VER -y
+yum install erlang-$ER_VER -y --quiet
 
 # Adding RabbitMQ Repository
 cat > /etc/yum.repos.d/rabbitmq.repo <<EOL
@@ -44,7 +43,7 @@ enabled=1
 EOL
 
 # Installing RabbitMQ
-sudo yum install rabbitmq-server-${MQ_VER} -y
+sudo yum install rabbitmq-server-${MQ_VER} -y --quiet
 
 # Add Firewall Rules if Running
 if [ `systemctl is-active firewalld` ]
@@ -56,8 +55,7 @@ else
 fi
 
 # Enable and Start RabbitMQ Service
-systemctl start rabbitmq-server
-systemctl enable rabbitmq-server
+systemctl enable --now rabbitmq-server
 
 # Configure Management Console
 echo "Enable RabbitMQ Management Console..."

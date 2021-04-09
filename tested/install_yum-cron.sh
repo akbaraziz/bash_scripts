@@ -1,21 +1,19 @@
 #!/bin/bash
 # Script author: Akbar Aziz
-# Script site: https://github.com/akbaraziz/bash_scripts
+# Script site: https://github.com/akbaraziz/bash_scripts/tested/install_yum-cron.sh
 # Script date: 06/05/2020
-# Script ver: 1.0
+# Script ver: 1.0.0
 # Script tested on OS: CentOS 7.x
 # Script purpose: Install yum-cron
-
 #--------------------------------------------------
 
 set -ex
 
 # Install yum-cron
-sudo yum install -y yum-cron
+sudo yum install -y yum-cron --quiet
 
 # Enable and Start Service
-sudo systemctl enable yum-cron
-sudo systemctl start yum-cron
+sudo systemctl enable --now yum-cron
 
 # Configure yum-cron
 sudo cat >/etc/yum/yum-cron-hourly.conf <<EOL

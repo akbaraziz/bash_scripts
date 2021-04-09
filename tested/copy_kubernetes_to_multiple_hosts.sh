@@ -1,4 +1,11 @@
 #!/bin/bash
+# Script author: Akbar Aziz
+# Script site: https://github.com/akbaraziz/bash_scripts/tested/copy_kubernetes_to_multiple_hosts.sh
+# Script create date: 07/02/2020
+# Script ver: 1.0.0
+# Script purpose: SCP Kubernetes Certificates to multiple hosts
+# Script tested on OS: CentOS 7.x
+#--------------------------------------------------
 
 set -ex
 
