@@ -5,7 +5,6 @@
 # Script ver: 1.0
 # Script tested on OS: CentOS 7.x
 # Script purpose: Install Docker CE
-
 #--------------------------------------------------
 
 set -ex
