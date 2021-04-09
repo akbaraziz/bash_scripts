@@ -13,7 +13,7 @@ SW_VER=2.10
 
 # Install Pre-Reqs
 sudo yum install -y yum-plugin-tmprepo --quiet
-sudo yum install -y spacewalk-repo --tmprepo=https://copr-be.cloud.fedoraproject.org/results/ %40spacewalkproject/spacewalk-${SW_VERSION}/epel-7-x86_64/repodata/repomd.xml --nogpg --quiet
+sudo yum install -y spacewalk-repo --tmprepo=https://copr-be.cloud.fedoraproject.org/results/ %40spacewalkproject/spacewalk-${SW_VER}/epel-7-x86_64/repodata/repomd.xml --nogpg --quiet
 
 # Install Epel repo
 sudo rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
