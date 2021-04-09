@@ -1,11 +1,10 @@
 #!/bin/bash
 # Script author: Akbar Aziz
-# Script site: https://github.com/akbaraziz/bash_scripts
+# Script site: https://github.com/akbaraziz/bash_scripts/blob/master/tested/install_docker-ce.sh
 # Script date: 06/0507/2020
-# Script ver: 1.0
+# Script ver: 1.0.0
+# Script purpose: Install Docker CE for Ubuntu Systems.
 # Script tested on OS: Ubuntu 20.04
-# Script purpose: Install Docker CE for Ubuntu Systems. 
-
 #--------------------------------------------------
 
 set -ex
@@ -16,9 +15,9 @@ sudo apt-get -y install apt-transport-https ca-certificates curl gnupg-agent sof
 # Add Docker Repo
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 sudo add-apt-repository \
-   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+"deb [arch=amd64] https://download.docker.com/linux/ubuntu \
    $(lsb_release -cs) \
-   stable"
+stable"
 
 # Install Docker CE
 sudo apt update -y
