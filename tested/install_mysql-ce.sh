@@ -2,10 +2,9 @@
 # Script author: Akbar Aziz
 # Script site: https://github.com/akbaraziz/bash_scripts
 # Script date: 06/05/2020
-# Script ver: 1.0
-# Script tested on OS: CentOS 7.x
+# Script ver: 1.0.0
 # Script purpose: Install MySQL Community Edition
-
+# Script tested on CentOS 7.x
 #--------------------------------------------------
 
 set -ex
@@ -23,21 +22,20 @@ else
 fi
 
 # Install OpenJDK 8
-sudo yum install -y java-1.8.0-openjdk
+sudo yum install -y java-1.8.0-openjdk --quiet
 
 # Set JAVA_HOME
 export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk
 export PATH=$JAVA_HOME:$PATH
 
 # Install MySQL 8 Community Edition
-yum install -y mysql-community-server
+yum install -y mysql-community-server --quiet
 
 # Enable and Start MySQL Service
-systemctl enable mysqld.service
-systemctl start mysqld.service
+systemctl enable --now mysqld.service
 
 # Get the temporary password
-cat| grep 'temporary password' /var/log/mysqld.log 
+cat| grep 'temporary password' /var/log/mysqld.log
 
 # Changing default authentication settings
 cat >/etc/my.cnf <<EOL

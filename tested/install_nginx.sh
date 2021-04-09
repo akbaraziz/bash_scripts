@@ -2,10 +2,9 @@
 # Script author: Akbar Aziz
 # Script site: https://github.com/akbaraziz/bash_scripts
 # Script date: 07/02/2020
-# Script ver: 1.1
-# Script tested on OS: CentOS 7.x
+# Script ver: 1.0.1
 # Script purpose: Install NGINX
-
+# Script tested on OS: CentOS 7.x
 #--------------------------------------------------
 
 set -ex
@@ -31,11 +30,10 @@ EOL
 #EOL
 
 # Install NGINX
-yum install -y nginx
+yum install -y nginx --quiet
 
 # Enable and Start NGINX Service
-systemctl start nginx 
-systemctl enable NGINX
+systemctl enable --now nginx
 
 # Configure NGINX
 mkdir -p /var/www/$DOMAIN

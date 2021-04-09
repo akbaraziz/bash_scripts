@@ -1,11 +1,10 @@
 #!/bin/bash
 # Script author: Akbar Aziz
-# Script site: https://github.com/akbaraziz/bash_scripts
+# Script site: https://github.com/akbaraziz/bash_scripts/tested/install_prometheus_ubuntu.sh
 # Script date: 06/05/2020
-# Script ver: 1.0
-# Script tested on OS: Ubuntu 20.04
+# Script ver: 1.0.0
 # Script purpose: Install Prometheus on Unbuntu
-
+# Script tested on OS: Ubuntu 20.04
 #--------------------------------------------------
 
 set -ex
@@ -50,10 +49,9 @@ WantedBy=multi-user.target
 EOF
 
 #  Reload Daemon
-sudo systemctl daemon-reload 
+sudo systemctl daemon-reload
 
 # Enable and Start Prometheus
-sudo systemctl enable prometheus
-sudo systemctl start prometheus
+sudo systemctl enable --now prometheus
 
 echo "End of installation"

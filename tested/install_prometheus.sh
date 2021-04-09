@@ -1,11 +1,10 @@
 #!/bin/bash
 # Script author: Akbar Aziz
-# Script site: https://github.com/akbaraziz/bash_scripts
+# Script site: https://github.com/akbaraziz/bash_scripts/tested/install_prometheus.sh
 # Script date: 03/31/2021
-# Script ver: 1.1
-# Script tested on OS: CentOS 7.8
+# Script ver: 1.0.1
 # Script purpose: Install Prometheus on CentOS
-
+# Script tested on OS: CentOS 7.x
 #--------------------------------------------------
 
 set -ex
@@ -32,7 +31,7 @@ sudo chown -R prometheus:prometheus /etc/prometheus
 sudo chown prometheus:prometheus /var/lib/prometheus
 
 # Create a Prometheus Configuration File
-cat <<EOF > /etc/prometheus/prometheus.yml 
+cat <<EOF > /etc/prometheus/prometheus.yml
 global:
   scrape_interval:     15s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
   evaluation_interval: 15s # Evaluate rules every 15 seconds. The default is every 1 minute.
@@ -98,7 +97,7 @@ for i in rules rules.d files_sd; do sudo chmod -R 775 /etc/prometheus/${i}; done
 sudo chown -R prometheus:prometheus /var/lib/prometheus/
 
 # Enable and Start Prometheus
-sudo systemctl daemon-reload 
+sudo systemctl daemon-reload
 sudo systemctl enable --now prometheus
 
 # Configure Firewalld
