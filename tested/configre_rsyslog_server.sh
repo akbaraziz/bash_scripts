@@ -1,5 +1,13 @@
 #!/bin/bash
+# Script author: Akbar Aziz
+# Script site: https://github.com/akbaraziz/bash_scripts/blob/master/tested/configre_rsyslog_server.sh
+# Script date: 06/05/2020
+# Script ver: 1.0.0
+# Script purpose: Check rsyslog server
+# Script tested on OS: CentOS and Redhat 7.x
+#--------------------------------------------------
 
+set -ex
 
 STATUS="$(systemctl is-active rsyslog.service)"
 if [ "${STATUS}" = "active" ]; then

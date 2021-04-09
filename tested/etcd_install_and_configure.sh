@@ -1,11 +1,18 @@
 #!/bin/bash
+# Script author: Akbar Aziz
+# Script site: https://github.com/akbaraziz/bash_scripts/blob/master/tested/etcd_install_and_configure.sh
+# Script date: 06/05/2020
+# Script ver: 1.0.0
+# Script purpose: To install ETCD on Linux for Nutanix Calm
+# Script tested on OS: CentOS and Redhat 7.x
+#--------------------------------------------------
+
 set -ex
 
-# - * - Section 1 <---------- Just a representation of section, Don't use in actual script ---------->
+# Variables
 ETCD_VERSION="v3.3.15"
 INTERNAL_IP="@@{address}@@"
 ETCD_IPS="@@{all_master_ip_address}@@"
-# Fetch Private key to push certs to other nodes in case of SSL_ON=yes
 PRIVATE_KEY="@@{CENTOS.secret}@@"
 NODE_NAME="etcd@@{calm_array_index}@@"
 CREATE_VOLUME="@@{CREATE_VOLUME}@@"

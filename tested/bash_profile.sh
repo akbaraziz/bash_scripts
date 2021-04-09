@@ -1,11 +1,10 @@
 #!/bin/bash
 # Script author: Akbar Aziz
-# Script site: https://github.com/akbaraziz/bash_scripts
+# Script site: https://github.com/akbaraziz/bash_scripts/blob/master/tested/bash_profile.sh
 # Script create date: 07/02/2020
-# Script ver: 1.0
-# Script tested on OS: CentOS 7.x
+# Script ver: 1.0.0
 # Script purpose: Set your Bash profile
-
+# Script tested on OS: CentOS 7.x
 #--------------------------------------------------
 
 set -ex
@@ -27,14 +26,12 @@ alias move='mv'
 alias rd='rmdir'
 alias ren='mv'
 alias ipconfig='ip a'
-
-# Other Linux stuff
 alias diff='diff -u'
 
-# get updates from RHN
+# Get OS Updates
 alias update='yum -y update'
 
-# force colorful grep output
+# Force colorful grep output
 alias grep='grep --color'
 
 # ls stuff

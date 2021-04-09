@@ -1,4 +1,11 @@
 #!/bin/bash
+# Script author: Akbar Aziz
+# Script site: https://github.com/akbaraziz/bash_scripts/blob/master/tested/install_and_configure_containerd.sh
+# Script date: 06/05/2020
+# Script ver: 1.0.0
+# Script purpose: To install and configure containerd.
+# Script tested on OS: CentOS and Redhat 7.x
+#--------------------------------------------------
 
 set -ex
 
@@ -21,19 +28,18 @@ EOF
 # Apply sysctl params without reboot
 sudo sysctl --system
 
-sudo yum install -y yum-utils device-mapper-persistent-data lvm2
+sudo yum install -y yum-utils device-mapper-persistent-data lvm2 --quiet
 
-# Install Containerd
-## Set up the repository
-### Install required packages
+# Install Docker Repo
 sudo yum-config-manager \
 --add-repo \
 https://download.docker.com/linux/centos/docker-ce.repo
 
-## Install containerd
-sudo yum update -y && sudo yum install -y containerd.io
+# Install containerd
+sudo yum clean all
+sudo yum install -y containerd.io --quiet
 
-# Configure Containerd
+# Configure containerd
 sudo mkdir -p /etc/containerd
 containerd config default | sudo tee /etc/containerd/config.toml
 

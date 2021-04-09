@@ -2,20 +2,18 @@
 # Script author: Akbar Aziz
 # Script site: https://github.com/akbaraziz/bash_scripts
 # Script date: 06/05/2020
-# Script ver: 1.0
+# Script ver: 1.0.0
+# Script purpose: Install Apache and PHP
 # Script tested on OS: CentOS 7.x
-# Script purpose: Install Apache PHP
-
 #--------------------------------------------------
 
 set -ex
 
-
-# Install httpd and php
-sudo yum update -y
-sudo yum -y install epel-release
+# Install Apache httpd and PhP
+sudo yum update -y --quiet
+sudo yum -y install epel-release --quiet
 sudo rpm -Uvh https://mirror.webtatic.com/yum/el7/webtatic-release.rpm
-sudo yum install -y httpd php56w php56w-mysql
+sudo yum install -y httpd php56w php56w-mysql --quiet
 
 # Add Modules
 echo "<IfModule mod_dir.c>
@@ -25,8 +23,7 @@ echo "<IfModule mod_dir.c>
 # Create Sample PHP Info File
 echo "<?php
 phpinfo();
-?>" | sudo tee /var/www/html/info.php 
+?>" | sudo tee /var/www/html/info.php
 
-# Enable and Start httpd 
-sudo systemctl restart httpd
-sudo systemctl enable httpd
+# Enable and Start httpd
+sudo systemctl enable --now httpd

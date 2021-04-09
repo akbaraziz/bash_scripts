@@ -1,4 +1,11 @@
 #!/bin/bash
+# Script author: Akbar Aziz
+# Script site: https://github.com/akbaraziz/bash_scripts/blob/master/tested/check_centos_mirror.sh
+# Script date: 03/21/2021
+# Script ver: 1.0.0
+# Script purpose: To check CentOS Mirror Availability
+# Script tested on OS: CentOS 7.x
+#--------------------------------------------------
 
 set -ex
 
