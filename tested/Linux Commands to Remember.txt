@@ -1,4 +1,12 @@
 UNIX Commands
+netstat -ano | sls 443
+
+Test-NetConnection 1.1.1.1 -port 80
+
+curl -v telnet://172.20.160.8:3250
+
+ssh-keygen -t rsa -b 4096 -f id_rsa -C test1 -N "" -q
+
 
 Get IP Address:
 ifconfig | grep inet | awk '{ print $2 }' | head -n 1
