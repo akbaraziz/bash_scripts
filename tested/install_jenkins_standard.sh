@@ -2,7 +2,7 @@
 # Script author: Akbar Aziz
 # Script site: https://github.com/akbaraziz/bash_scripts/tested/install_jenkins_standard.sh
 # Script date: 4/10/2021
-# Script ver: 1.0.1
+# Script ver: 1.0.2
 # Script purpose: Install Jenkins
 # Script tested on OS: CentOS 7.x
 #--------------------------------------------------
