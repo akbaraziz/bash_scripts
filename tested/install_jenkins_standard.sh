@@ -1,7 +1,7 @@
 #!/bin/bash
 # Script author: Akbar Aziz
 # Script site: https://github.com/akbaraziz/bash_scripts/tested/install_jenkins_standard.sh
-# Script date: 11/30/2020
+# Script date: 4/10/2021
 # Script ver: 1.0.1
 # Script purpose: Install Jenkins
 # Script tested on OS: CentOS 7.x
@@ -9,7 +9,7 @@
 
 set -ex
 
-sudo yum install -y wget --quiet
+sudo yum install -y wget java-11-openjdk-devel --quiet
 
 #Import jenkins-ci rpm and install jenkins
 sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat/jenkins.repo
