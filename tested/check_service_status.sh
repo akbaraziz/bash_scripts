@@ -13,13 +13,14 @@ set -ex
 service=
 
 # Check Service Status
-host=`hostname -f`
-if (( $(ps -ef | grep -v grep | grep $service | wc -l) > 0 ))
+host=$(hostname -f)
+if (( $(ps -ef | grep -v grep | grep -c "$service") > 0 ))
 then
-echo "$service is running"
+    echo "$service is running"
 else
-/usr/sbin/service $service start
-if (( $(ps -ef | grep -v grep | grep $service | wc -l) > 0 ))
+    /usr/sbin/service "$service" start
+fi
+if (( $(ps -ef | grep -v grep | grep -c "$service") > 0 ))
 then
-echo "$service on $host has been started"
+    echo "$service on $host has been started"
 fi

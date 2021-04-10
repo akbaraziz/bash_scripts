@@ -10,8 +10,8 @@
 set -ex
 
 echo "Search user:"
-read typed
-if id $typed > /dev/null 2>&1
+read -r typed
+if id "$typed" > /dev/null 2>&1
 then
     echo "user exist!"
 else
