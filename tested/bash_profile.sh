@@ -16,7 +16,7 @@ sudo yum install bash-completion
 source /etc/profile.d/bash_completion.sh
 
 # CMD Line aliases
-alias edit=$VISUAL
+alias edit='$VISUAL'
 alias copy='cp'
 alias cls='clear'
 alias del='rm'

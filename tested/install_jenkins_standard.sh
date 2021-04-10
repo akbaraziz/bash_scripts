@@ -27,7 +27,7 @@ sudo usermod -s /bin/bash jenkins
 echo "jenkins      ALL=(ALL) NOPASSWD" | sudo tee -a /etc/sudoers > /dev/null
 
 # Add Firewall Rules if Running
-if [ `systemctl is-active firewalld` ]
+if [ "$(systemctl is-active firewalld)" ]
 then
     firewall-cmd --permanent --service=jenkins --set-short="Jenkins Service Ports"
     firewall-cmd --permanent --service=jenkins --set-description="Jenkins service firewalld port exceptions"
@@ -35,8 +35,8 @@ then
     firewall-cmd --permanent --zone=public --add-service=http
     firewall-cmd --reload
 else
-    firewall_status=inactive
+    "firewall_status"=inactive
 fi
 
 # Get auth password from Jenkins
-echo "authpwd="$(sudo cat /var/lib/jenkins/secrets/initialAdminPassword)
+echo "authpwd=""$(sudo cat /var/lib/jenkins/secrets/initialAdminPassword)"
