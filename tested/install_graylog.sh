@@ -1,8 +1,15 @@
 #!/bin/bash
+# Script author: Akbar Aziz
+# Script site: https://github.com/akbaraziz/bash_scripts/tested/install_graylog.sh
+# Script date: 03/31/2021
+# Script ver: 1.0.0
+# Script purpose: To Install Grafana on CentOS 7 system
+# Script tested on OS: CentOS 7.x
+#--------------------------------------------------
 
 set -ex
 
-## Initialize Variables
+# Variables
 ADMIN_PASSWORD="@@{ADMIN_PASSWORD}@@"
 ADMIN_EMAIL="@@{ADMIN_EMAIL}@@"
 VM_IP="@@{STATIC_IP}@@"
@@ -24,12 +31,12 @@ sed -i --follow-symlinks 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/sysconfig
 sudo systemctl disable firewalld
 sudo systemctl stop firewalld
 
-## Install Java
+# Install Java
 sudo yum -y install epel-release
 sudo yum install -y java-1.8.0-openjdk-headless.x86_64
 sudo yum -y install pwgen
 
-## Install mongo
+# Install mongo
 echo '[mongodb-org-4.2]
 name=MongoDB Repository
 baseurl=https://repo.mongodb.org/yum/redhat/$releasever/mongodb-org/4.2/x86_64/
@@ -40,8 +47,7 @@ sudo yum makecache
 sudo yum install -y mongodb-org
 sudo systemctl enable --now mongod
 
-
-## Install and configure elastic search
+# Install and configure elastic search
 sudo rpm --import https://packages.elastic.co/GPG-KEY-elasticsearch
 echo '[elasticsearch]
 name=Elasticsearch repository
@@ -62,17 +68,16 @@ sudo systemctl enable --now elasticsearch
 
 sleep 15
 
-## Verify elastic search 
+# Verify elastic search
 sudo curl -XGET 'http://localhost:9200/_cluster/health?pretty=true'
 
-
-## Install graylog
+# Install graylog
 sudo rpm -Uvh https://packages.graylog2.org/repo/packages/graylog-4.0-repository_latest.rpm
 sudo yum update -y
 sudo yum install -y graylog-server
 
 
-## Configure graylog conf
+# Configure graylog conf
 sudo sed -i '/password_secret/s/^/#/' /etc/graylog/server/server.conf
 sudo sed -i '/root_password_sha2/s/^/#/' /etc/graylog/server/server.conf
 sudo sed -i '/elasticsearch_shards/s/^/#/' /etc/graylog/server/server.conf
@@ -92,14 +97,11 @@ script.indexed: false
 http_bind_address = ${VM_IP}
 script.file: false" | sudo tee -a /etc/graylog/server/server.conf
 
-
-
 sudo sed -i '/web_listen_uri/s/^#//' /etc/graylog/server/server.conf
 sudo sed -i "/rest_listen_uri/s/127.0.0.1/${VM_IP}/" /etc/graylog/server/server.conf
 sudo sed -i "/web_listen_uri/s/127.0.0.1/${VM_IP}/" /etc/graylog/server/server.conf
 
-
-## Start graylog service
+# Start graylog service
 sudo systemctl daemon-reload
 sudo systemctl enable --now graylog-server
 sudo systemctl status graylog-server

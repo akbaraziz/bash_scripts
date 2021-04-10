@@ -1,10 +1,10 @@
 #!/bin/bash
 # Script author: Akbar Aziz
-# Script site: https://github.com/akbaraziz/bash_scripts
+# Script site: https://github.com/akbaraziz/bash_scripts/blob/master/tested/install_docker-ce.sh
 # Script date: 06/05/2020
-# Script ver: 1.0
+# Script ver: 1.0.0
+# Script purpose: Install Docker CE on Linux
 # Script tested on OS: CentOS 7.x
-# Script purpose: Install Docker CE
 #--------------------------------------------------
 
 set -ex
@@ -26,7 +26,7 @@ else
 fi
 
 # Install Docker CE Pre-Reqs
-sudo yum install -y yum-utils device-mapper-persistent-data lvm2
+sudo yum install -y yum-utils device-mapper-persistent-data lvm2 --quiet
 
 # Create Docker Repository
 yum-config-manager \
@@ -34,7 +34,7 @@ yum-config-manager \
 https://download.docker.com/linux/centos/docker-ce.repo
 
 ## Install Docker CE.
-yum install docker-ce
+yum install docker-ce containerd.io --quiet
 
 # Setup daemon
 sudo mkdir -p /etc/docker
@@ -57,5 +57,5 @@ sudo systemctl daemon-reload
 sudo systemctl enable docker
 sudo systemctl restart docker
 
-# Post Install Steps
+# Add User to Docker Group
 sudo usermod -aG docker $USER

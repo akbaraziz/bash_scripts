@@ -1,11 +1,10 @@
 #!/bin/bash
 # Script author: Akbar Aziz
-# Script site: https://github.com/akbaraziz/bash_scripts
+# Script site: https://github.com/akbaraziz/bash_scripts/tested/install_grafana.sh
 # Script date: 03/31/2021
-# Script ver: 1.1
-# Script tested on OS: CentOS 7.x
+# Script ver: 1.0.1
 # Script purpose: To Install Grafana on CentOS 7 system
-
+# Script tested on OS: CentOS 7.x
 #--------------------------------------------------
 
 set -ex

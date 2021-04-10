@@ -1,9 +1,11 @@
-##!/bin/bash
-# To install Docker in Dark Site (no internet access). Some files will need to be downloaded before starting.
-# Created by: Akbar Aziz
-# Date: 06/05/2020
-# Version: 1.0
-
+#!/bin/bash
+# Script author: Akbar Aziz
+# Script site: https://github.com/akbaraziz/bash_scripts/blob/master/tested/install_docker_offline.sh
+# Script date: 06/05/2020
+# Script ver: 1.0.0
+# Script purpose: Install Docker CE Off-line
+# Script tested on OS: CentOS 7.x
+#--------------------------------------------------
 
 set -ex
 
@@ -46,6 +48,5 @@ sudo cd ~/docker
 sudo rpm -ivh --replacefiles --replacepkgs *.rpm
 
 # Start and Enable Docker
-sudo systemctl enable docker.service
-sudo systemctl start docker.service
+sudo systemctl enable --now docker
 

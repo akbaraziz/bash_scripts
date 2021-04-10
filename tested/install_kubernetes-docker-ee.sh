@@ -2,10 +2,9 @@
 # Script author: Akbar Aziz
 # Script site: https://github.com/akbaraziz/bash_scripts
 # Script date: 06/19/2020
-# Script ver: 1.0
-# Script tested on OS: CentOS 7.x
+# Script ver: 1.0.0
 # Script purpose: To install Docker, Flannel, Kubernetes, Kubernetes Dashboard, Kubernetes Metric Server, and Helm Charts
-
+# Script tested on OS: CentOS 7.x
 #--------------------------------------------------
 
 set -ex
@@ -67,14 +66,6 @@ sed -i '/ swap/ s/^/#/' /etc/fstab
 sudo systemctl disable firewalld
 sudo systemctl stop firewalld
 
-# Enable IPTables
-sudo yum install -y --quiet iptables-services.x86_64
-sudo systemctl start iptables
-sudo systemctl enable iptables
-sudo systemctl unmask iptables
-sudo iptables -F
-sudo service iptables save
-
 # Configure IPTables to see Bridged Traffic
 cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
 net.bridge.bridge-nf-call-ip6tables = 1
@@ -86,7 +77,6 @@ sudo sysctl --system
 sudo yum install -y --quiet yum-utils device-mapper-persistent-data lvm2 container-selinux iscsi-initiator-utils socat
 
 # Remove Existing Version of Docker if installed
-# Check for existing version of Docker and remove if found
 if rpm -qa | grep -q docker*; then
     yum remove -y docker*;
 else

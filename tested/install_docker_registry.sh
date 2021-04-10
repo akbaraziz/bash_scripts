@@ -1,8 +1,15 @@
 #!/bin/bash
+# Script author: Akbar Aziz
+# Script site: https://github.com/akbaraziz/bash_scripts/blob/master/tested/install_docker_registry.sh
+# Script date: 06/05/2020
+# Script ver: 1.0.0
+# Script purpose: Install Docker Registry
+# Script tested on OS: CentOS 7.x
+#--------------------------------------------------
 
 set -ex
 
-sudo yum install -y httpd-utils
+sudo yum install -y httpd-utils --quiet
 
 echo "Creating docker-registry directory..."
 sudo mkdir -p /docker-registry/data

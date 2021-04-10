@@ -1,11 +1,10 @@
 #!/bin/bash
 # Script author: Akbar Aziz
-# Script site: https://github.com/akbaraziz/bash_scripts
+# Script site: https://github.com/akbaraziz/bash_scripts/tested/install_kibana.sh
 # Script date: 12/09/2020
-# Script ver: 1.0
-# Script tested on OS: CentOS 7.x
+# Script ver: 1.0.0
 # Script purpose: To install Kibana
-
+# Script tested on OS: CentOS 7.x
 #--------------------------------------------------
 
 set -ex
@@ -14,7 +13,7 @@ set -ex
 rpm --import https://artifacts.elastic.co/GPG-KEY-elasticsearch
 
 # Create RPM Repository
-cat >/etc/yum.repos.d/kibana.repo <<EOL 
+cat >/etc/yum.repos.d/kibana.repo <<EOL
 [kibana-7.x]
 name=Kibana repository for 7.x packages
 baseurl=https://artifacts.elastic.co/packages/7.x/yum

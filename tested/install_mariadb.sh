@@ -1,11 +1,10 @@
 #!/bin/bash
 # Script author: Akbar Aziz
-# Script site: https://github.com/akbaraziz/bash_scripts
+# Script site: https://github.com/akbaraziz/bash_scripts/tested/install_mariadb.sh
 # Script date: 06/05/2020
-# Script ver: 1.0
-# Script tested on OS: CentOS 7.x
+# Script ver: 1.0.0
 # Script purpose: Install MariaDB
-
+# Script tested on OS: CentOS 7.x
 #--------------------------------------------------
 
 set -ex
@@ -21,11 +20,10 @@ enabled=1
 EOL
 
 # Install MariaDB and Components
-sudo yum install -y MariaDB-server galera MariaDB-client MariaDB-shared MariaDB-backup MariaDB-common
+sudo yum install -y MariaDB-server galera MariaDB-client MariaDB-shared MariaDB-backup MariaDB-common --quiet
 
 # Enable and Start MariaDB
-sudo systemctl start mariadb
-sudo systemctl enable mariadb
+sudo systemctl enable --now mariadb
 
 # Secure MariaDB Installation
 sudo mysql_secure_installation

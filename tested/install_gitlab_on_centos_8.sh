@@ -1,4 +1,11 @@
 #!/bin/bash
+# Script author: Akbar Aziz
+# Script site: https://github.com/akbaraziz/bash_scripts/tested/install_gitlab_on_centos_8.sh
+# Script date: 06/23/2020
+# Script ver: 1.0.0
+# Script purpose: Install GitLab Community Edition
+# Script tested on OS: CentOS 8.x
+#--------------------------------------------------
 
 set -ex
 
@@ -21,7 +28,7 @@ curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.rp
 sudo dnf install -y gitlab-ce
 
 # Configure GitLab
-if [[ "${GITLAB_DNS_NAME}x" != "x" ]]; then 
-  sudo sed -i "s#external_url 'http://gitlab.example.com'#external_url 'http://${GITLAB_DNS_NAME}'#" /etc/gitlab/gitlab.rb
+if [[ "${GITLAB_DNS_NAME}x" != "x" ]]; then
+    sudo sed -i "s#external_url 'http://gitlab.example.com'#external_url 'http://${GITLAB_DNS_NAME}'#" /etc/gitlab/gitlab.rb
 fi
 sudo gitlab-ctl reconfigure

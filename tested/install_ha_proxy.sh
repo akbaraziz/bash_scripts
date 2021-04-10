@@ -1,11 +1,10 @@
 #!/bin/bash
 # Script author: Akbar Aziz
-# Script site: https://github.com/akbaraziz/bash_scripts
+# Script site: https://github.com/akbaraziz/bash_scripts/tested/install_ha_proxy.sh
 # Script date: 06/05/2020
 # Script ver: 1.0
-# Script tested on OS: CentOS 7.x
 # Script purpose: Install HA Proxy
-
+# Script tested on OS: CentOS 7.x
 #--------------------------------------------------
 
 set -ex
@@ -17,8 +16,8 @@ sudo setenforce 0
 sudo sed -i 's/permissive/disabled/' /etc/sysconfig/selinux
 
 # Install HAProxy
-sudo yum update -y
-sudo yum install -y haproxy
+sudo yum update -y --quiet
+sudo yum install -y haproxy --quiet
 
 # HAProxy Configuration
 echo "global
@@ -66,7 +65,7 @@ hosts=$(echo "@@{APACHE_PHP.address}@@" | sed 's/^,//' | sed 's/,$//' | tr "," "
 
 for host in $hosts
 do
-   echo "  server host-${host} ${host}:${port} weight 1 maxconn 100 check" | sudo tee -a /etc/haproxy/haproxy.cfg
+    echo "  server host-${host} ${host}:${port} weight 1 maxconn 100 check" | sudo tee -a /etc/haproxy/haproxy.cfg
 done
 
 # Enable and Restart HAProxy

@@ -1,16 +1,15 @@
 #!/bin/bash
 # Script author: Akbar Aziz
-# Script site: https://github.com/akbaraziz/bash_scripts
+# Script site: https://github.com/akbaraziz/bash_scripts/tested/install_docker-ee.sh
 # Script date: 06/05/2020
-# Script ver: 1.0
+# Script ver: 1.0.0
+# Script purpose: Install Docker EE
 # Script tested on OS: CentOS 7.x
-# Script purpose: Install Docker EE - Must supply the Docker Hub URL for your account
-
 #--------------------------------------------------
 
 set -ex
 
-export dockerurl=https://storebits.docker.com/ee/m/subscription-id/centos
+export dockerurl=https://repos.mirantis.com/centos
 
 # Disable swap
 sudo swapoff -a
@@ -36,11 +35,11 @@ fi
 sudo rpm --import $dockerurl/gpg
 sudo -E sh -c 'echo "$dockerurl" > /etc/yum/vars/dockerurl'
 sudo sh -c 'echo "7" > /etc/yum/vars/dockerosversion'
-sudo yum install -y yum-utils device-mapper-persistent-date lvm2
+sudo yum install -y yum-utils device-mapper-persistent-date lvm2 --quiet
 sudo yum-config-manager --enable rhel-7-server-extras-rpms
 sudo yum makecache fast
 sudo -E yum-config-manager --add-repo "$dockerurl/docker-ee.repo"
-sudo yum install -y docker-ee docker-ee-cli containerd.io
+sudo yum install -y docker-ee docker-ee-cli containerd.io --quiet
 
 # Setup daemon
 mkdir -p /etc/docker
@@ -63,5 +62,5 @@ sudo systemctl daemon-reload
 sudo systemctl restart docker
 sudo systemctl enable docker
 
-# Post Install Steps
+# Add User to Docker Group
 sudo usermod -aG docker $USER
