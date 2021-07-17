@@ -6,11 +6,11 @@ commonname=$domain
 
 #Change to your company details
 country=US
-state=California
-locality=San Jose
-organization=Nutanix
+state=Texas
+locality=Houston
+organization=Home Lab
 organizationalunit=IT
-email=administrator@nutanix.com
+email=administrator@lab.local
 
 #Optional
 password=dummypassword
