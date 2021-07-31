@@ -9,21 +9,6 @@
 
 set -ex
 
-NETMASK=
-IP_ADDR=
-GW=
-DEVICE_ID=eth0
-
-system-config-network-cmd -i <<EOF
-DeviceList.Ethernet.eth0.type=Ethernet
-DeviceList.Ethernet.eth0.BootProto=static
-DeviceList.Ethernet.eth0.OnBoot=True
-DeviceList.Ethernet.eth0.NMControlled=False
-DeviceList.Ethernet.eth0.Netmask="${NETMASK}"
-DeviceList.Ethernet.eth0.IP="${IP_ADDR}"
-DeviceList.Ethernet.eth0.Gateway="${GW}"
-ProfileList.default.ActiveDevices.1="${DEVICE_ID}"
-EOF
-
-service network stop
-service network start
+# Set IP Address and Gateway
+sudo nmcli con mod eth0 ipv4.addresses @@{IP_ADDRESS}@@/@@{CIDR}@@ ipv4.gateway @@{GATEWAY}@@ ipv4.method manual
+#sudo nmcli con up eth0
