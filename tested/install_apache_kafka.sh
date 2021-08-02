@@ -21,13 +21,6 @@ else
     sudo setsebool -P nis_enabled 1
 fi
 
-# Remove Existing Version of Java if installed
-if rpm -qa | grep -q java*; then
-    yum remove -y java*;
-else
-    echo Not Installed
-fi
-
 # Install Java
 sudo yum -y install java-1.8.0-open-jdk
 
