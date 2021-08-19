@@ -10,6 +10,6 @@
 set -ex
 
 # Unregister from Satellite or RHN
-sudo subscription-manager remove --all
-sudo subscription-manager unregister
+sudo subscription-manager remove --all && \
+sudo subscription-manager unregister && \
 sudo subscription-manager clean
