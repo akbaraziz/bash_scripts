@@ -39,7 +39,7 @@ def getapidata(path):
 
     sid = authvc(get_url, get_user, get_passwd)
     r = requests.get(f'{get_url}/rest{path}',
-                     headers={'vmware-api-session-id': sid}, verify=False)
+                     headers={'vmware-api-session-id': sid}, verify=True)
     if r.status_code == 200:
         return r.json()
     else:
