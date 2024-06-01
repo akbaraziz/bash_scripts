@@ -24,7 +24,7 @@ requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 def authvc(api_url, user, password):
     r = requests.post(f'{api_url}/rest/com/vmware/cis/session',
-                      auth=(user, password), verify=False)
+                      auth=(user, password), verify=True)
     if r.status_code == 200:
         print("Authentication Success")
         return r.json()['value']
